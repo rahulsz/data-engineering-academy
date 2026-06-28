@@ -70,6 +70,7 @@ export function Sidebar() {
             <Link
               key={route.href}
               href={route.href}
+              prefetch={false}
               className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors group",
                 pathname === route.href

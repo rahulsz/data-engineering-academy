@@ -48,6 +48,7 @@ export function Navbar() {
                 <Link 
                   key={item.name} 
                   href={item.href} 
+                  prefetch={false}
                   className="text-[13px] font-medium text-muted-foreground hover:text-foreground hover:bg-white/5 px-3 py-1.5 rounded-full transition-colors"
                 >
                   {item.name}
@@ -99,9 +100,9 @@ export function Navbar() {
         {mobileMenuOpen && (
           <div className="md:hidden absolute top-[calc(100%+8px)] left-0 w-full p-2 border border-white/10 bg-black/80 backdrop-blur-3xl rounded-2xl shadow-2xl">
             <nav className="flex flex-col gap-1 text-[13px] font-medium p-2">
-              <Link href="/learn" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Learn</Link>
-              <Link href="/practice" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Practice</Link>
-              <Link href="/playground/sql" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Playground</Link>
+              <Link href="/learn" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Learn</Link>
+              <Link href="/practice" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Practice</Link>
+              <Link href="/playground/sql" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Playground</Link>
               <div className="px-4 py-2 mt-2">
                 <CommandMenu />
               </div>
