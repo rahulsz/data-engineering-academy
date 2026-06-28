@@ -12,8 +12,20 @@ export async function getDashboardData() {
 
   await connectDB();
   
-  const user = await User.findOne({ clerkId });
-  if (!user) throw new Error("User not found");
+  let user = await User.findOne({ clerkId });
+  if (!user) {
+    const { currentUser } = await import("@clerk/nextjs/server");
+    const clerkUser = await currentUser();
+    if (!clerkUser) throw new Error("User not found");
+    
+    user = await User.create({
+      clerkId: clerkId,
+      email: clerkUser.emailAddresses[0].emailAddress,
+      firstName: clerkUser.firstName || "",
+      lastName: clerkUser.lastName || "",
+      avatar: clerkUser.imageUrl || "",
+    });
+  }
 
   const userId = user._id;
 

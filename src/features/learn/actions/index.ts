@@ -90,7 +90,21 @@ export async function getModuleWithProgress(moduleSlug: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let userProgress: any[] = [];
   if (clerkId) {
-    const user = await User.findOne({ clerkId });
+    let user = await User.findOne({ clerkId });
+    if (!user) {
+      const { currentUser } = await import("@clerk/nextjs/server");
+      const clerkUser = await currentUser();
+      if (clerkUser) {
+        user = await User.create({
+          clerkId: clerkId,
+          email: clerkUser.emailAddresses[0].emailAddress,
+          firstName: clerkUser.firstName || "",
+          lastName: clerkUser.lastName || "",
+          avatar: clerkUser.imageUrl || "",
+        });
+      }
+    }
+    
     if (user) {
       userProgress = await Progress.find({ userId: user._id, moduleId: moduleDoc._id }).lean();
     }
