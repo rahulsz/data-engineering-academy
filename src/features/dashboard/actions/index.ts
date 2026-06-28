@@ -4,6 +4,8 @@ import { connectDB } from "@/lib/db";
 import { User } from "@/models/User";
 import { Progress } from "@/models/Progress";
 import { Achievement } from "@/models/Achievement";
+import { Lesson } from "@/models/Lesson";
+import { Module } from "@/models/Module";
 import { auth } from "@clerk/nextjs/server";
 
 export async function getDashboardData() {
