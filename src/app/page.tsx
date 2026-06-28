@@ -288,8 +288,28 @@ export default function LandingPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
               {Array.from({ length: 15 }).map((_, i) => {
-                const icons = [Database, Terminal, SquareTerminal, Cloud, Server, Zap, Network, Archive, Activity, Box, Workflow, Repeat, Shield, Layers, Trophy];
-                const Icon = icons[i];
+                const moduleTitles = ["SQL Fundamentals", "Python Basics", "Linux & Bash", "Cloud Storage (S3)", "PostgreSQL Deep Dive", "Apache Spark", "Data Modeling", "Data Warehousing", "Kafka Streaming", "Docker for DE", "Airflow Orchestration", "dbt Transformations", "Security & Governance", "Advanced Architecture", "Capstone Project"];
+                const moduleIcons = [
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original-wordmark.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apachespark/apachespark-original.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azuresqldatabase/azuresqldatabase-original.svg',
+                  'https://upload.wikimedia.org/wikipedia/commons/f/ff/Snowflake_Logo.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apachekafka/apachekafka-original.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apacheairflow/apacheairflow-original.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/d3js/d3js-original.svg',
+                  null, // Security
+                  null, // Architecture
+                  null  // Capstone
+                ];
+                const FallbackIcons = [Database, Terminal, SquareTerminal, Cloud, Server, Zap, Network, Archive, Activity, Box, Workflow, Repeat, Shield, Layers, Trophy];
+                const FallbackIcon = FallbackIcons[i];
+                const svgIcon = moduleIcons[i];
+                
                 return (
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
@@ -300,11 +320,16 @@ export default function LandingPage() {
                   className="h-full"
                 >
                   <SpotlightCard className="h-full p-6 flex flex-col cursor-pointer group">
-                    <div className="mb-5 text-primary/80 group-hover:text-primary group-hover:scale-110 transition-all duration-500">
-                      <Icon className="w-8 h-8" />
+                    <div className="mb-5 w-10 h-10 flex items-center justify-center text-primary/80 group-hover:text-primary group-hover:scale-110 transition-transform duration-500">
+                      {svgIcon ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img src={svgIcon} alt={moduleTitles[i]} className="w-full h-full object-contain drop-shadow-md" />
+                      ) : (
+                        <FallbackIcon className="w-8 h-8" />
+                      )}
                     </div>
                     <h3 className="font-semibold text-base mb-2 leading-tight tracking-tight flex-1 group-hover:text-primary transition-colors">
-                      {["SQL Fundamentals", "Python Basics", "Linux & Bash", "Cloud Storage (S3)", "PostgreSQL Deep Dive", "Apache Spark", "Data Modeling", "Data Warehousing", "Kafka Streaming", "Docker for DE", "Airflow Orchestration", "dbt Transformations", "Security & Governance", "Advanced Architecture", "Capstone Project"][i]}
+                      {moduleTitles[i]}
                     </h3>
                     <div className="flex items-center justify-between mt-4 text-xs font-medium tracking-wide">
                       <span className="text-muted-foreground/70">{10 + (i % 5)*2} Lessons</span>
