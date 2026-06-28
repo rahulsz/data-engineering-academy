@@ -24,11 +24,34 @@ const getModuleIcon = (slug?: string) => {
 };
 
 export default async function DashboardPage() {
-  const { user, stats, recentProgress, achievements } = await getDashboardData();
-  const weeklyData = await getWeeklyXPData(user._id);
+  let dashboardData;
+  let weeklyData;
+  let xpNeeded = 100;
+  let xpProgress = 0;
+  let errorMsg = null;
 
-  const xpNeeded = getXPForNextLevel(stats.level);
-  const xpProgress = Math.min((stats.totalXP / xpNeeded) * 100, 100);
+  try {
+    dashboardData = await getDashboardData();
+    weeklyData = await getWeeklyXPData(dashboardData.user._id);
+    xpNeeded = getXPForNextLevel(dashboardData.stats.level);
+    xpProgress = Math.min((dashboardData.stats.totalXP / xpNeeded) * 100, 100);
+  } catch (err: any) {
+    errorMsg = err.message || "An unknown error occurred.";
+    console.error("Dashboard error:", err);
+  }
+
+  if (errorMsg) {
+    return (
+      <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-10">
+        <div className="bg-red-500/10 border border-red-500/50 p-6 rounded-xl">
+          <h2 className="text-xl font-bold text-red-400 mb-2">Dashboard Error Debug</h2>
+          <p className="text-red-300 font-mono text-sm">{errorMsg}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { user, stats, recentProgress, achievements } = dashboardData!;
 
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-10">
