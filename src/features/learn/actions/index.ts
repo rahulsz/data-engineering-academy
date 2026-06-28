@@ -168,3 +168,56 @@ export async function getUserBookmarks() {
   const bookmarks = await Bookmark.find({ userId: user._id }).lean();
   return JSON.parse(JSON.stringify(bookmarks));
 }
+
+// ---- NEW SSG ACTIONS ----
+
+export async function getStaticModules() {
+  await connectDB();
+  const modules = await Module.find({}).select('slug').lean();
+  return JSON.parse(JSON.stringify(modules));
+}
+
+export async function getStaticLessons() {
+  await connectDB();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const lessons = await Lesson.find({}).populate('moduleId', 'slug').lean() as any[];
+  return JSON.parse(JSON.stringify(lessons));
+}
+
+export async function getModuleContent(moduleSlug: string) {
+  await connectDB();
+  const moduleDoc = await Module.findOne({ slug: moduleSlug }).lean();
+  if (!moduleDoc) return null;
+  const lessons = await Lesson.find({ moduleId: moduleDoc._id }).sort({ order: 1 }).lean();
+  return {
+    module: JSON.parse(JSON.stringify(moduleDoc)),
+    lessons: JSON.parse(JSON.stringify(lessons)),
+  };
+}
+
+export async function getUserProgressForModule(moduleSlug: string) {
+  const { userId: clerkId } = await auth();
+  if (!clerkId) return [];
+  
+  await connectDB();
+  const user = await User.findOne({ clerkId });
+  if (!user) return [];
+  
+  const moduleDoc = await Module.findOne({ slug: moduleSlug });
+  if (!moduleDoc) return [];
+  
+  const progress = await Progress.find({ userId: user._id, moduleId: moduleDoc._id }).lean();
+  return JSON.parse(JSON.stringify(progress));
+}
+
+export async function getUserProgressForLesson(lessonId: string) {
+  const { userId: clerkId } = await auth();
+  if (!clerkId) return null;
+  
+  await connectDB();
+  const user = await User.findOne({ clerkId });
+  if (!user) return null;
+  
+  const progress = await Progress.findOne({ userId: user._id, lessonId }).lean();
+  return JSON.parse(JSON.stringify(progress));
+}

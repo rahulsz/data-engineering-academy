@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Clock, BookOpen, Layers } from "lucide-react";
-export const dynamic = 'force-dynamic'; // Always fetch fresh courses from DB
+export const revalidate = 3600; // Static ISR, revalidates every hour
 const getCourseIcon = (slug: string) => {
   const icons: Record<string, string> = {
     'sql': 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original-wordmark.svg',

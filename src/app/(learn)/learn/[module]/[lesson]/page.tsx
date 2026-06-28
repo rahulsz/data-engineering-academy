@@ -1,4 +1,4 @@
-import { getLessonBySlug, getModuleWithProgress, getAdjacentLessons } from "@/features/learn/actions";
+import { getStaticLessons, getLessonBySlug, getModuleContent } from "@/features/learn/actions";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeHighlight from "rehype-highlight";
@@ -7,12 +7,19 @@ import { CodeBlock } from "@/components/mdx/CodeBlock";
 import { VisualizerEmbed } from "@/components/mdx/VisualizerEmbed";
 import { QuizEmbed } from "@/components/mdx/QuizEmbed";
 import { MarkCompleteButton } from "./_components/MarkCompleteButton";
+import { LessonSidebar } from "./_components/LessonSidebar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, List } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const revalidate = 0; // Dynamic for progress
+export async function generateStaticParams() {
+  const lessons = await getStaticLessons();
+  return lessons.map((l: any) => ({
+    module: l.moduleId?.slug,
+    lesson: l.slug,
+  })).filter((p: any) => p.module && p.lesson);
+}
 
 const components = {
   Callout,
@@ -36,10 +43,13 @@ export default async function LessonPage({ params }: { params: { module: string,
   const lesson = await getLessonBySlug(params.module, params.lesson);
   if (!lesson) notFound();
 
-  const moduleData = await getModuleWithProgress(params.module);
-  const { prev, next } = await getAdjacentLessons(lesson._id);
+  const data = await getModuleContent(params.module);
+  if (!data) notFound();
+  const { module, lessons } = data;
 
-  const isCompleted = moduleData?.progress.some((p: any) => p.lessonId === lesson._id && p.status === "completed");
+  const currentIndex = lessons.findIndex((l: any) => l._id === lesson._id);
+  const prev = currentIndex > 0 ? lessons[currentIndex - 1] : null;
+  const next = currentIndex < lessons.length - 1 ? lessons[currentIndex + 1] : null;
 
   return (
     <div className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
@@ -50,7 +60,7 @@ export default async function LessonPage({ params }: { params: { module: string,
         <div className="flex items-center gap-2 text-sm text-slate-400 mb-8">
           <Link href="/learn" className="hover:text-white transition-colors">Curriculum</Link>
           <span>/</span>
-          <Link href={`/learn/${params.module}`} className="hover:text-white transition-colors">{moduleData?.module?.title}</Link>
+          <Link href={`/learn/${params.module}`} className="hover:text-white transition-colors">{module?.title}</Link>
           <span>/</span>
           <span className="text-indigo-400 truncate max-w-[200px]">{lesson.title}</span>
         </div>
@@ -88,7 +98,7 @@ export default async function LessonPage({ params }: { params: { module: string,
 
         {/* Completion Area */}
         <div className="mt-16 pt-8 border-t border-surface-deep/50 flex flex-col md:flex-row items-center justify-between gap-6">
-          <MarkCompleteButton lessonId={lesson._id} isCompleted={isCompleted} />
+          <MarkCompleteButton lessonId={lesson._id} />
           
           <div className="flex gap-4 w-full md:w-auto">
             {prev ? (
@@ -110,34 +120,13 @@ export default async function LessonPage({ params }: { params: { module: string,
         </div>
       </div>
 
-      {/* Right Sidebar - Module Syllabus */}
-      <div className="w-full lg:w-80 shrink-0 border-l border-surface-deep/50 bg-black/20 p-6 order-1 lg:order-2 sticky top-0 h-auto lg:h-[calc(100vh-4rem)] overflow-y-auto">
-        <div className="flex items-center gap-2 text-white font-bold mb-6 font-display border-b border-surface-deep/50 pb-4">
-          <List className="w-5 h-5 text-indigo-400" />
-          {moduleData?.module?.title}
-        </div>
-        
-        <div className="space-y-1">
-          {moduleData?.lessons?.map((l: any, i: number) => {
-            const isActive = l._id === lesson._id;
-            const isDone = moduleData.progress.some((p: any) => p.lessonId === l._id && p.status === "completed");
-            
-            return (
-              <Link key={l._id} href={`/learn/${params.module}/${l.slug}`}>
-                <div className={cn(
-                  "px-3 py-2.5 rounded-lg text-sm flex gap-3 transition-colors",
-                  isActive ? "bg-indigo-500/10 text-indigo-300 font-medium border border-indigo-500/20" : 
-                  isDone ? "text-slate-400 hover:bg-surface-deep/30" : 
-                  "text-slate-500 hover:text-slate-300 hover:bg-surface-deep/30"
-                )}>
-                  <span className="font-mono text-xs opacity-50 mt-0.5 w-4">{i + 1}.</span>
-                  <span className="line-clamp-2 leading-snug">{l.title}</span>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
+      {/* Right Sidebar - Module Syllabus (Client Component) */}
+      <LessonSidebar 
+        moduleTitle={module.title}
+        moduleSlug={params.module}
+        lessons={lessons}
+        activeLessonId={lesson._id}
+      />
     </div>
   );
 }
