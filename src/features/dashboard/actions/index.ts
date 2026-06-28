@@ -6,7 +6,8 @@ import { Progress } from "@/models/Progress";
 import { Achievement } from "@/models/Achievement";
 import { Lesson } from "@/models/Lesson";
 import { Module } from "@/models/Module";
-import { auth } from "@clerk/nextjs/server";
+import { Course } from "@/models/Course";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export async function getDashboardData() {
   const { userId: clerkId } = await auth();
@@ -16,7 +17,6 @@ export async function getDashboardData() {
   
   let user = await User.findOne({ clerkId });
   if (!user) {
-    const { currentUser } = await import("@clerk/nextjs/server");
     const clerkUser = await currentUser();
     if (!clerkUser) throw new Error("User not found");
     

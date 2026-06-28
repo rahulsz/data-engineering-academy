@@ -6,7 +6,7 @@ import { Progress } from "@/models/Progress";
 import { Lesson } from "@/models/Lesson";
 import { Module } from "@/models/Module";
 import { Bookmark } from "@/models/Bookmark";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { awardXP, updateStreak, checkAchievements } from "@/lib/xp";
 import { revalidatePath } from "next/cache";
 
@@ -92,7 +92,6 @@ export async function getModuleWithProgress(moduleSlug: string) {
   if (clerkId) {
     let user = await User.findOne({ clerkId });
     if (!user) {
-      const { currentUser } = await import("@clerk/nextjs/server");
       const clerkUser = await currentUser();
       if (clerkUser) {
         user = await User.create({
