@@ -19,17 +19,30 @@ export async function getDashboardData() {
   await connectDB();
   
   let user = await User.findOne({ clerkId });
+  
   if (!user) {
     const clerkUser = await currentUser();
-    if (!clerkUser) throw new Error("User not found");
+    if (!clerkUser) throw new Error("User not found in Clerk");
     
-    user = await User.create({
-      clerkId: clerkId,
-      email: clerkUser.emailAddresses[0].emailAddress,
-      firstName: clerkUser.firstName || "",
-      lastName: clerkUser.lastName || "",
-      avatar: clerkUser.imageUrl || "",
-    });
+    const email = clerkUser.emailAddresses[0].emailAddress;
+    
+    // Check if user exists with the same email but different clerkId (e.g. account recreation)
+    user = await User.findOne({ email });
+    
+    if (user) {
+      // Update the clerkId to the new one
+      user.clerkId = clerkId;
+      await user.save();
+    } else {
+      // Create a brand new user
+      user = await User.create({
+        clerkId: clerkId,
+        email: email,
+        firstName: clerkUser.firstName || "",
+        lastName: clerkUser.lastName || "",
+        avatar: clerkUser.imageUrl || "",
+      });
+    }
   }
 
   const userId = user._id;

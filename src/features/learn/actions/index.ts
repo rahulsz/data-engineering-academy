@@ -91,12 +91,21 @@ export async function getModuleWithProgress(moduleSlug: string) {
   let userProgress: any[] = [];
   if (clerkId) {
     let user = await User.findOne({ clerkId });
+  
     if (!user) {
       const clerkUser = await currentUser();
-      if (clerkUser) {
+      if (!clerkUser) return null;
+      
+      const email = clerkUser.emailAddresses[0].emailAddress;
+      user = await User.findOne({ email });
+      
+      if (user) {
+        user.clerkId = clerkId;
+        await user.save();
+      } else {
         user = await User.create({
-          clerkId: clerkId,
-          email: clerkUser.emailAddresses[0].emailAddress,
+          clerkId,
+          email: email,
           firstName: clerkUser.firstName || "",
           lastName: clerkUser.lastName || "",
           avatar: clerkUser.imageUrl || "",
