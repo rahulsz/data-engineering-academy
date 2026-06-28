@@ -22,6 +22,7 @@ export async function connectDB() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      dbName: "data_engineering_academy",
     };
 
     cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
