@@ -7,6 +7,9 @@ import { Achievement } from "@/models/Achievement";
 import { Lesson } from "@/models/Lesson";
 import { Module } from "@/models/Module";
 import { Course } from "@/models/Course";
+import { Quiz } from "@/models/Quiz";
+import { QuizAttempt } from "@/models/QuizAttempt";
+import { Roadmap } from "@/models/Roadmap";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 export async function getDashboardData() {
