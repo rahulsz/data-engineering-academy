@@ -12,6 +12,15 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/curriculum',
+        destination: '/learn',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
