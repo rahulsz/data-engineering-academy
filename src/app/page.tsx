@@ -156,7 +156,7 @@ export default function LandingPage() {
                       <span className="text-[#c678dd]">SELECT</span>
                     </div>
                     <div className="pl-8">
-                      <span className="text-[#56b6c2]">DATE_TRUNC</span>(<span className="text-[#98c379]">'month'</span>, created_at) <span className="text-[#c678dd]">AS</span> month,
+                      <span className="text-[#56b6c2]">DATE_TRUNC</span>(<span className="text-[#98c379]">&apos;month&apos;</span>, created_at) <span className="text-[#c678dd]">AS</span> month,
                     </div>
                     <div className="pl-8">
                       <span className="text-[#56b6c2]">SUM</span>(amount) <span className="text-[#c678dd]">AS</span> total_revenue
@@ -363,7 +363,7 @@ export default function LandingPage() {
                 <div className="absolute top-0 right-0 bg-white/5 text-white/40 text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-bl-xl">Legacy Platforms</div>
                 <h3 className="text-2xl font-semibold mb-8 text-white/50 tracking-tight">The Old Way</h3>
                 <ul className="space-y-6">
-                  <li className="flex items-start gap-4 text-lg font-light tracking-tight opacity-50"><XCircle className="w-6 h-6 shrink-0 mt-0.5" /> Passive video lectures that don't test your knowledge.</li>
+                  <li className="flex items-start gap-4 text-lg font-light tracking-tight opacity-50"><XCircle className="w-6 h-6 shrink-0 mt-0.5" /> Passive video lectures that don&apos;t test your knowledge.</li>
                   <li className="flex items-start gap-4 text-lg font-light tracking-tight opacity-50"><XCircle className="w-6 h-6 shrink-0 mt-0.5" /> Expensive recurring monthly subscriptions.</li>
                   <li className="flex items-start gap-4 text-lg font-light tracking-tight opacity-50"><XCircle className="w-6 h-6 shrink-0 mt-0.5" /> Requires local setup of complex databases and tools.</li>
                 </ul>
@@ -412,7 +412,7 @@ export default function LandingPage() {
                   key={i} 
                   className="bg-white/[0.02] border border-white/10 rounded-2xl p-8 backdrop-blur-md flex flex-col h-full hover:bg-white/[0.04] transition-colors"
                 >
-                  <div className="text-zinc-400 font-light tracking-tight leading-relaxed mb-8 flex-1">"{test.text}"</div>
+                  <div className="text-zinc-400 font-light tracking-tight leading-relaxed mb-8 flex-1">&quot;{test.text}&quot;</div>
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold border border-primary/30">
                       {test.name.charAt(0)}

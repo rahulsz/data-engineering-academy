@@ -5,6 +5,7 @@ export interface IRoadmapNode {
   label: string;
   type: "topic" | "resource" | "milestone";
   position: { x: number; y: number };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;
 }
 

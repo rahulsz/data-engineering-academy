@@ -19,7 +19,7 @@ export function Navbar() {
   const y = useTransform(scrollY, [0, 100], [0, 16]);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 px-4 pointer-events-none">
+    <div className="sticky top-0 z-50 flex justify-center pt-6 px-4 pb-6 pointer-events-none">
       <motion.header
         style={{ width, y }}
         initial={{ y: -100, opacity: 0 }}

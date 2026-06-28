@@ -40,6 +40,7 @@ export function Sidebar() {
       <div className="p-6 border-b">
         {isLoaded && user ? (
           <div className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={user.imageUrl}
               alt={user.fullName || "User"}
