@@ -32,15 +32,15 @@ export default function SignUpPage() {
           <SignUp 
             appearance={{
               elements: {
-                card: "bg-black/40 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 m-0",
+                card: "bg-black/40 backdrop-blur-2xl border border-border shadow-2xl shadow-black/50 m-0",
                 headerTitle: "hidden",
                 headerSubtitle: "hidden",
-                socialButtonsBlockButton: "border-white/10 bg-white/5 hover:bg-white/10 text-foreground transition-colors",
+                socialButtonsBlockButton: "border-border bg-white/5 hover:bg-white/10 text-foreground transition-colors",
                 socialButtonsBlockButtonText: "font-medium text-[13px]",
                 dividerLine: "bg-white/10",
                 dividerText: "text-muted-foreground text-xs",
                 formFieldLabel: "text-muted-foreground text-xs font-medium",
-                formFieldInput: "bg-white/5 border-white/10 text-foreground focus:ring-primary/50 focus:border-primary/50",
+                formFieldInput: "bg-white/5 border-border text-foreground focus:ring-primary/50 focus:border-primary/50",
                 formButtonPrimary: "bg-foreground text-background hover:bg-foreground/90 font-medium text-sm transition-colors",
                 footerActionText: "text-muted-foreground text-[13px]",
                 footerActionLink: "text-primary hover:text-primary/80 font-medium",

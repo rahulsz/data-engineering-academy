@@ -35,7 +35,7 @@ export function Sidebar() {
     <motion.aside
       initial={{ x: -240 }}
       animate={{ x: 0 }}
-      className="hidden md:flex flex-col w-[240px] h-[calc(100vh-4rem)] border-r bg-background shrink-0 sticky top-16"
+      className="hidden md:flex flex-col w-[240px] h-full border-r border-border bg-background shrink-0"
     >
       <div className="p-6 border-b">
         {isLoaded && user ? (

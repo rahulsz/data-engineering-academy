@@ -3,13 +3,13 @@ import { Zap, GitBranch, MessageSquare, Briefcase, ArrowUpRight } from "lucide-r
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black pt-24 pb-8 relative overflow-hidden">
+    <footer className="border-t border-border bg-black pt-24 pb-8 relative overflow-hidden">
       {/* Decorative Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:linear-gradient(to_bottom,white,transparent)] pointer-events-none -z-10" />
       
       <div className="container mx-auto px-6 max-w-7xl">
         {/* Pre-Footer CTA */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-16 mb-16 gap-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-border pb-16 mb-16 gap-8">
           <div>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-4">
               Ready to engineer data?
@@ -36,13 +36,13 @@ export function Footer() {
               The ultimate open-source learning platform for modern data engineering. Interactive playgrounds, real-world architecture, zero setup.
             </p>
             <div className="flex gap-4">
-              <Link href="https://github.com" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:bg-white/10 hover:text-white transition-all">
+              <Link href="https://github.com" className="w-10 h-10 rounded-full bg-white/5 border border-border flex items-center justify-center text-zinc-400 hover:bg-white/10 hover:text-white transition-all">
                 <GitBranch className="w-4 h-4" />
               </Link>
-              <Link href="https://twitter.com" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:bg-white/10 hover:text-white transition-all">
+              <Link href="https://twitter.com" className="w-10 h-10 rounded-full bg-white/5 border border-border flex items-center justify-center text-zinc-400 hover:bg-white/10 hover:text-white transition-all">
                 <MessageSquare className="w-4 h-4" />
               </Link>
-              <Link href="https://linkedin.com" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:bg-white/10 hover:text-white transition-all">
+              <Link href="https://linkedin.com" className="w-10 h-10 rounded-full bg-white/5 border border-border flex items-center justify-center text-zinc-400 hover:bg-white/10 hover:text-white transition-all">
                 <Briefcase className="w-4 h-4" />
               </Link>
             </div>
@@ -80,7 +80,7 @@ export function Footer() {
         </div>
         
         {/* Bottom Bar */}
-        <div className="mt-20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 border-t border-white/10">
+        <div className="mt-20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 border-t border-border">
           <p className="text-[14px] text-zinc-500 font-light tracking-tight">
             © {new Date().getFullYear()} DataEngineering.Academy. All rights reserved.
           </p>

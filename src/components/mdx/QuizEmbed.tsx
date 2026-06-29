@@ -1,22 +1,64 @@
-import React from "react";
-import { HelpCircle } from "lucide-react";
+'use client';
 
-export function QuizEmbed({ id }: { id: string }) {
-  return (
-    <div className="my-8 rounded-xl border border-emerald-500/30 bg-emerald-950/10 p-8 text-center flex flex-col items-center justify-center relative overflow-hidden group">
-      <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="p-4 bg-emerald-500/20 rounded-2xl mb-4 relative z-10">
-        <HelpCircle className="w-8 h-8 text-emerald-400" />
+import React, { useState, useEffect } from 'react';
+import { QuizUI } from '@/features/quiz/components/QuizUI';
+import { AlertCircle } from 'lucide-react';
+
+interface QuizEmbedProps {
+  quizId: string;
+  nextLessonSlug?: string;
+}
+
+export function QuizEmbed({ quizId, nextLessonSlug }: QuizEmbedProps) {
+  const [quiz, setQuiz] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchQuiz() {
+      try {
+        const res = await fetch(`/api/quiz/${quizId}`);
+        if (!res.ok) {
+          throw new Error('Quiz not found');
+        }
+        const data = await res.json();
+        setQuiz(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchQuiz();
+  }, [quizId]);
+
+  if (loading) {
+    return (
+      <div className="rounded-2xl border border-border bg-card p-8 my-6 max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[300px]">
+        <div className="w-16 h-16 bg-white/5 rounded-2xl animate-pulse mb-6" />
+        <div className="w-48 h-6 bg-white/5 rounded animate-pulse mb-4" />
+        <div className="w-full max-w-md h-4 bg-white/5 rounded animate-pulse mb-2" />
+        <div className="w-full max-w-sm h-4 bg-white/5 rounded animate-pulse mb-8" />
+        <div className="w-full h-12 bg-white/5 rounded-xl animate-pulse" />
       </div>
-      <h4 className="text-lg font-display font-semibold text-white mb-2 relative z-10">
-        Knowledge Check: Quiz {id}
-      </h4>
-      <p className="text-slate-400 max-w-md relative z-10">
-        Test your understanding of the concepts covered in this lesson. (Coming in Sprint 4)
-      </p>
-      <button className="mt-6 px-6 py-2 bg-emerald-500/20 text-emerald-300 rounded-full font-medium border border-emerald-500/50 hover:bg-emerald-500/30 transition-colors relative z-10 cursor-not-allowed">
-        Start Quiz (Locked)
-      </button>
+    );
+  }
+
+  if (error || !quiz) {
+    return (
+      <div className="rounded-2xl border border-red-500/20 bg-red-950/20 p-8 my-6 max-w-2xl mx-auto flex flex-col items-center justify-center text-center min-h-[200px]">
+        <AlertCircle className="w-10 h-10 text-red-500 mb-4" />
+        <h3 className="text-lg font-bold text-red-400 mb-2">Quiz Load Error</h3>
+        <p className="text-red-300/70 text-sm">
+          {error || 'Unable to load this quiz module. It may have been moved or deleted.'}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="my-8">
+      <QuizUI quiz={quiz} nextLessonSlug={nextLessonSlug} />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { Zap, Target, BookOpen, Layers, Trophy } from "lucide-react";
 import Link from "next/link";
 import { EmptyState } from "@/components/common/EmptyState";
 import { WeeklyXPChart } from "./_components/WeeklyXPChart";
+import { ModuleProgressGrid, ActivityTimeline } from "./_components/DashboardGrids";
 import { getXPForNextLevel } from "@/lib/xp";
 
 export const revalidate = 0; // Disable caching for dashboard
@@ -25,7 +26,7 @@ const getModuleIcon = (slug?: string) => {
 
 export default async function DashboardPage() {
   let dashboardData;
-  let weeklyData;
+  let weeklyData: { day: string; xp: number }[] = [];
   let xpNeeded = 100;
   let xpProgress = 0;
   let errorMsg = null;
@@ -51,7 +52,7 @@ export default async function DashboardPage() {
     );
   }
 
-  const { user, stats, recentProgress, achievements } = dashboardData!;
+  const { user, stats, recentProgress, achievements, modules, timeline, recommended } = dashboardData!;
 
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-10">
@@ -67,7 +68,7 @@ export default async function DashboardPage() {
 
       {/* Stats Grid - Bento Style */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-white/5 border-white/10 backdrop-blur-xl hover:bg-white/10 transition-colors shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+        <Card className="bg-white/5 border-border backdrop-blur-xl hover:bg-white/10 transition-colors shadow-[0_0_20px_rgba(0,0,0,0.2)]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">Total XP</CardTitle>
             <div className="p-2 bg-amber-500/10 rounded-md border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
@@ -80,7 +81,7 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
         
-        <Card className="bg-white/5 border-white/10 backdrop-blur-xl hover:bg-white/10 transition-colors shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+        <Card className="bg-white/5 border-border backdrop-blur-xl hover:bg-white/10 transition-colors shadow-[0_0_20px_rgba(0,0,0,0.2)]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">Current Streak</CardTitle>
             <div className="p-2 bg-orange-500/10 rounded-md border border-orange-500/20 shadow-[0_0_15px_rgba(249,115,22,0.2)]">
@@ -93,7 +94,7 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10 backdrop-blur-xl hover:bg-white/10 transition-colors shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+        <Card className="bg-white/5 border-border backdrop-blur-xl hover:bg-white/10 transition-colors shadow-[0_0_20px_rgba(0,0,0,0.2)]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">Lessons Completed</CardTitle>
             <div className="p-2 bg-blue-500/10 rounded-md border border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
@@ -106,7 +107,7 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10 backdrop-blur-xl hover:bg-white/10 transition-colors shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+        <Card className="bg-white/5 border-border backdrop-blur-xl hover:bg-white/10 transition-colors shadow-[0_0_20px_rgba(0,0,0,0.2)]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">Modules Started</CardTitle>
             <div className="p-2 bg-emerald-500/10 rounded-md border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
@@ -127,7 +128,7 @@ export default async function DashboardPage() {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Level Progress - Gamer Style */}
-          <section className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-xl shadow-[0_0_30px_rgba(0,0,0,0.3)] relative overflow-hidden">
+          <section className="bg-white/5 border border-border rounded-2xl p-8 backdrop-blur-xl shadow-[0_0_30px_rgba(0,0,0,0.3)] relative overflow-hidden">
             {/* Glow effect behind the card */}
             <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-cyan-500/10 blur-[80px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full pointer-events-none" />
@@ -148,7 +149,7 @@ export default async function DashboardPage() {
             </div>
             
             {/* Neon Progress Bar */}
-            <div className="h-6 w-full bg-black/40 border border-white/10 rounded-full overflow-hidden p-1 shadow-inner relative z-10">
+            <div className="h-6 w-full bg-black/40 border border-border rounded-full overflow-hidden p-1 shadow-inner relative z-10">
               <div 
                 className="h-full rounded-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-500 shadow-[0_0_20px_rgba(99,102,241,0.6)] transition-all duration-1000 ease-out relative"
                 style={{ width: `${xpProgress}%` }}
@@ -173,8 +174,8 @@ export default async function DashboardPage() {
               <div className="space-y-4">
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {recentProgress.map((prog: any) => (
-                  <div key={prog._id} className="group flex items-center gap-5 p-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-cyan-500/30 transition-all duration-300 shadow-lg hover:shadow-[0_0_25px_rgba(34,211,238,0.15)] cursor-pointer">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/20 to-indigo-500/20 border border-white/10 flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                  <div key={prog._id} className="group flex items-center gap-5 p-5 rounded-2xl border border-border bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-cyan-500/30 transition-all duration-300 shadow-lg hover:shadow-[0_0_25px_rgba(34,211,238,0.15)] cursor-pointer">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/20 to-indigo-500/20 border border-border flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
                       {getModuleIcon(prog.moduleId?.slug) ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
                         <img src={getModuleIcon(prog.moduleId?.slug)!} alt="icon" className="w-8 h-8 object-contain drop-shadow-md" />
@@ -211,6 +212,34 @@ export default async function DashboardPage() {
               <WeeklyXPChart data={weeklyData} />
             </div>
           </section>
+
+          {/* Recommended Topics */}
+          {recommended && recommended.length > 0 && (
+            <section>
+              <h2 className="text-2xl font-display font-bold text-white mb-6">Recommended for you</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {recommended.map((lesson: any) => (
+                  <Link key={lesson._id} href={`/learn/sql/${lesson.slug}`}>
+                    <div className="p-5 rounded-2xl border border-border bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-cyan-500/30 transition-all shadow-md group h-full flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded border border-cyan-500/20">
+                            {lesson.type}
+                          </span>
+                          <span className="text-xs text-amber-400 font-semibold">+{lesson.xpReward} XP</span>
+                        </div>
+                        <h4 className="text-white font-semibold group-hover:text-cyan-300 transition-colors line-clamp-2">{lesson.title}</h4>
+                      </div>
+                      <div className="text-xs text-slate-400 mt-4 flex items-center gap-1 font-medium">
+                        <BookOpen className="w-3.5 h-3.5" />
+                        Start lesson &rarr;
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
 
         {/* Right Column: Achievements & Activity */}
@@ -227,7 +256,7 @@ export default async function DashboardPage() {
               <div className="flex overflow-x-auto snap-x pb-6 -mx-2 px-2 gap-4 hide-scrollbar">
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {achievements.map((ach: any) => (
-                  <div key={ach._id} className="snap-start shrink-0 w-[260px] flex flex-col gap-4 p-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-amber-500/30 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] group">
+                  <div key={ach._id} className="snap-start shrink-0 w-[260px] flex flex-col gap-4 p-5 rounded-2xl border border-border bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-amber-500/30 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] group">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl shadow-inner group-hover:scale-110 transition-transform">
                         {ach.icon}
@@ -251,8 +280,26 @@ export default async function DashboardPage() {
               />
             )}
           </section>
+
+          {/* Activity Timeline */}
+          <section>
+            <h2 className="text-2xl font-display font-bold text-white mb-6">Activity Timeline</h2>
+            <ActivityTimeline timeline={timeline} />
+          </section>
         </div>
       </div>
+
+      {/* Module Progress Grid (Full Width below) */}
+      <section className="pt-8 border-t border-border">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-2xl font-display font-bold text-white">Module Progress</h2>
+          <Link href="/learn" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+            Course Catalog &rarr;
+          </Link>
+        </div>
+        <p className="text-slate-400 text-sm">Track your progress across all available modules.</p>
+        <ModuleProgressGrid modules={modules} />
+      </section>
     </div>
   );
 }

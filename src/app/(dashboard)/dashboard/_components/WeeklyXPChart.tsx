@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -17,6 +17,11 @@ interface WeeklyXPChartProps {
 }
 
 export function WeeklyXPChart({ data }: WeeklyXPChartProps) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart

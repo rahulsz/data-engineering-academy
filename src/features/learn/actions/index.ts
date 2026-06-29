@@ -1,11 +1,17 @@
 "use server";
 
 import { connectDB } from "@/lib/db";
+// Mongoose cold-start registration
 import { User } from "@/models/User";
 import { Progress } from "@/models/Progress";
 import { Lesson } from "@/models/Lesson";
 import { Module } from "@/models/Module";
 import { Bookmark } from "@/models/Bookmark";
+import { Course } from "@/models/Course";
+import { Quiz } from "@/models/Quiz";
+import { QuizAttempt } from "@/models/QuizAttempt";
+import { Achievement } from "@/models/Achievement";
+import { Roadmap } from "@/models/Roadmap";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { awardXP, updateStreak, checkAchievements } from "@/lib/xp";
 import { revalidatePath } from "next/cache";
@@ -97,20 +103,20 @@ export async function getModuleWithProgress(moduleSlug: string) {
       if (!clerkUser) return null;
       
       const email = clerkUser.emailAddresses[0].emailAddress;
-      user = await User.findOne({ email });
       
-      if (user) {
-        user.clerkId = clerkId;
-        await user.save();
-      } else {
-        user = await User.create({
-          clerkId,
-          email: email,
-          firstName: clerkUser.firstName || "",
-          lastName: clerkUser.lastName || "",
-          avatar: clerkUser.imageUrl || "",
-        });
-      }
+      user = await User.findOneAndUpdate(
+        { $or: [{ clerkId }, { email }] },
+        { 
+          $set: { 
+            clerkId, 
+            email,
+            firstName: clerkUser.firstName || "",
+            lastName: clerkUser.lastName || "",
+            avatar: clerkUser.imageUrl || ""
+          } 
+        },
+        { upsert: true, returnDocument: 'after' }
+      );
     }
     
     if (user) {

@@ -25,7 +25,7 @@ export function Navbar() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="relative max-w-6xl w-full pointer-events-auto border border-white/10 bg-black/40 backdrop-blur-2xl rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.4)] supports-[backdrop-filter]:bg-black/20"
+        className="relative max-w-6xl w-full pointer-events-auto border border-border bg-black/40 backdrop-blur-2xl rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.4)] supports-[backdrop-filter]:bg-black/20"
       >
         <div className="flex h-14 items-center justify-between px-6">
           <div className="flex items-center gap-8">
@@ -98,7 +98,7 @@ export function Navbar() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-[calc(100%+8px)] left-0 w-full p-2 border border-white/10 bg-black/80 backdrop-blur-3xl rounded-2xl shadow-2xl">
+          <div className="md:hidden absolute top-[calc(100%+8px)] left-0 w-full p-2 border border-border bg-black/80 backdrop-blur-3xl rounded-2xl shadow-2xl">
             <nav className="flex flex-col gap-1 text-[13px] font-medium p-2">
               <Link href="/learn" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Learn</Link>
               <Link href="/practice" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Practice</Link>
@@ -107,7 +107,7 @@ export function Navbar() {
                 <CommandMenu />
               </div>
               {!isSignedIn && (
-                <div className="flex flex-col gap-2 mt-2 pt-2 border-t border-white/10">
+                <div className="flex flex-col gap-2 mt-2 pt-2 border-t border-border">
                   <Link href="/sign-in"><button className="w-full text-left px-4 py-2 hover:bg-white/5 rounded-lg text-muted-foreground">Log in</button></Link>
                   <Link href="/sign-up"><button className="w-full text-left px-4 py-2 bg-primary/20 text-primary rounded-lg mt-1">Sign up free</button></Link>
                 </div>

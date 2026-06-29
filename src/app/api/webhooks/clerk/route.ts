@@ -82,7 +82,7 @@ export async function POST(req: Request) {
           lastName: last_name || "",
           avatar: image_url || "",
         },
-        { new: true }
+        { returnDocument: 'after' }
       );
       return new NextResponse("User updated successfully", { status: 200 });
     } catch (error) {

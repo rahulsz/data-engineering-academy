@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar } from "@/components/layout/Navbar";
+import { AppHeader } from "@/components/layout/AppHeader";
 import { Sidebar } from "@/components/layout/Sidebar";
 
 export default function LearnLayout({
@@ -8,11 +8,11 @@ export default function LearnLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#020617] text-white flex flex-col">
-      <Navbar />
-      <div className="flex flex-1 overflow-hidden">
+    <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
+      <AppHeader />
+      <div className="flex flex-1 overflow-hidden h-[calc(100vh-56px)]">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto relative bg-background">
+        <main className="flex-1 overflow-y-auto relative h-full">
           {children}
         </main>
       </div>

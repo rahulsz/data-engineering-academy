@@ -1,6 +1,7 @@
 "use server";
 
 import { connectDB } from "@/lib/db";
+// Mongoose cold-start registration
 import { User } from "@/models/User";
 import { Progress } from "@/models/Progress";
 import { Achievement } from "@/models/Achievement";
@@ -26,24 +27,22 @@ export async function getDashboardData() {
     
     const email = clerkUser.emailAddresses[0].emailAddress;
     
-    // Check if user exists with the same email but different clerkId (e.g. account recreation)
-    user = await User.findOne({ email });
-    
-    if (user) {
-      // Update the clerkId to the new one
-      user.clerkId = clerkId;
-      await user.save();
-    } else {
-      // Create a brand new user
-      user = await User.create({
-        clerkId: clerkId,
-        email: email,
-        firstName: clerkUser.firstName || "",
-        lastName: clerkUser.lastName || "",
-        avatar: clerkUser.imageUrl || "",
-      });
-    }
+    user = await User.findOneAndUpdate(
+      { $or: [{ clerkId }, { email }] },
+      { 
+        $set: { 
+          clerkId, 
+          email,
+          firstName: clerkUser.firstName || "",
+          lastName: clerkUser.lastName || "",
+          avatar: clerkUser.imageUrl || ""
+        } 
+      },
+      { upsert: true, returnDocument: 'after' }
+    );
   }
+
+  if (!user) throw new Error("Failed to create or retrieve user from database");
 
   const userId = user._id;
 
@@ -84,14 +83,71 @@ export async function getDashboardData() {
     .sort({ unlockedAt: -1 })
     .limit(3)
     .lean();
-  
   const achievements = JSON.parse(JSON.stringify(achievementsRaw));
+  
+  // 4. Get all Courses (modules) and progress
+  const coursesRaw = await Course.find({ published: true }).sort({ order: 1 }).lean();
+  const progressAggregation = await Progress.aggregate([
+    { $match: { userId: userId, status: "completed" } },
+    { $group: { _id: "$courseId", completedLessons: { $sum: 1 } } }
+  ]);
+  
+  const progressMap = new Map(progressAggregation.map(p => [p._id?.toString(), p.completedLessons]));
+  
+  const modules = coursesRaw.map(course => ({
+    ...course,
+    completedLessons: progressMap.get(course._id.toString()) || 0
+  }));
+
+  // 5. Activity Timeline
+  const recentAchievementsForTimeline = await Achievement.find({ userId }).sort({ unlockedAt: -1 }).limit(10).lean();
+  const recentCompletedLessons = await Progress.find({ userId, status: "completed" })
+    .sort({ completedAt: -1 })
+    .limit(10)
+    // @ts-ignore - populated fields
+    .populate("lessonId", "title")
+    .lean();
+    
+  const timeline = [
+    ...recentAchievementsForTimeline.map(a => ({
+      type: 'achievement',
+      id: a._id.toString(),
+      title: a.title,
+      description: a.description,
+      date: a.unlockedAt,
+      icon: a.icon
+    })),
+    ...recentCompletedLessons.map(p => ({
+      type: 'lesson',
+      id: p._id.toString(),
+      // @ts-ignore - populated fields
+      title: `Completed: ${p.lessonId?.title || 'Lesson'}`,
+      description: `Earned ${p.xpEarned || 10} XP`,
+      date: p.completedAt || (p as any).updatedAt || new Date(),
+      icon: '✅'
+    }))
+  ].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 10);
+  
+  // 6. Recommended Topics (from SQL course)
+  let recommended: any[] = [];
+  const sqlCourse = await Course.findOne({ slug: 'sql' }).lean();
+  if (sqlCourse) {
+    const completedSqlLessons = await Progress.find({ userId, courseId: sqlCourse._id, status: "completed" }).lean();
+    const completedSqlLessonIds = completedSqlLessons.map(p => p.lessonId?.toString());
+    recommended = await Lesson.find({ 
+      courseId: sqlCourse._id, 
+      _id: { $nin: completedSqlLessonIds } 
+    }).limit(4).lean();
+  }
 
   return {
     user: JSON.parse(JSON.stringify(user)),
     recentProgress,
     stats,
     achievements,
+    modules: JSON.parse(JSON.stringify(modules)),
+    timeline: JSON.parse(JSON.stringify(timeline)),
+    recommended: JSON.parse(JSON.stringify(recommended)),
   };
 }
 
@@ -128,4 +184,37 @@ export async function getModuleProgress(userId: string) {
   ]);
   
   return JSON.parse(JSON.stringify(progressAggregation));
+}
+
+export async function updateProfile(data: {
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  bio?: string;
+  github?: string;
+  linkedin?: string;
+}) {
+  const { userId: clerkId } = await auth();
+  if (!clerkId) throw new Error("Unauthorized");
+
+  await connectDB();
+  
+  const user = await User.findOneAndUpdate(
+    { clerkId },
+    { 
+      $set: {
+        ...(data.username && { username: data.username }),
+        ...(data.firstName && { firstName: data.firstName }),
+        ...(data.lastName && { lastName: data.lastName }),
+        ...(data.bio && { bio: data.bio }),
+        'socialLinks.github': data.github || "",
+        'socialLinks.linkedin': data.linkedin || ""
+      }
+    },
+    { returnDocument: 'after' }
+  );
+
+  if (!user) throw new Error("User not found");
+
+  return JSON.parse(JSON.stringify(user));
 }
