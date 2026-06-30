@@ -112,7 +112,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       {/* Content Tabs */}
       <div className="max-w-4xl mx-auto px-6 md:px-10 py-12 w-full">
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="w-full justify-start bg-transparent border-b border-border rounded-none h-auto p-0 space-x-6 overflow-x-auto overflow-y-hidden">
+          <TabsList className="w-full justify-start bg-transparent border-b border-border rounded-none h-auto p-0 space-x-6 overflow-x-auto overflow-y-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <TabsTrigger value="overview" className="cursor-pointer data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-cyan-500 rounded-none border-b-2 border-transparent px-1 py-4 text-sm font-medium text-slate-400 data-[state=active]:text-cyan-400 transition-colors">
               <LayoutTemplate className="w-4 h-4 mr-2" />
               Overview

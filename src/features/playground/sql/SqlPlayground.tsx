@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
-import { Play, Database, History, Bookmark, Settings, Download, FileJson, Copy, ArrowUpDown, ArrowUp, ArrowDown, X, Save, Search, ChevronDown, ChevronRight, Terminal, FolderOpen, Code2 } from 'lucide-react';
+import { Play, Database, History, Bookmark, Settings, Download, FileJson, Copy, ArrowUpDown, ArrowUp, ArrowDown, X, Save, Search, ChevronDown, ChevronRight, Terminal, FolderOpen, Code2, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const DEFAULT_QUERIES = {
@@ -84,6 +84,7 @@ export function SqlPlayground() {
   
   const [showHistory, setShowHistory] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [saved, setSaved] = useState<SavedEntry[]>([]);
   const [saveName, setSaveName] = useState('');
@@ -331,10 +332,42 @@ export function SqlPlayground() {
       `}} />
 
       {/* TopNavBar */}
-      <header className="bg-[#131313]/80 backdrop-blur-xl border-b border-[#3d494c]/30 shadow-[0_0_15px_rgba(6,182,212,0.1)] flex justify-between items-center w-full px-6 py-2 sticky top-0 z-50 shrink-0">
-        <div className="flex items-center gap-6">
-          <h1 className="font-bold text-xl tracking-tighter text-[#06b6d4]">DATA_OS // COMMAND_CENTER</h1>
-          {/* Database Selector */}
+      <header className="bg-[#131313]/80 backdrop-blur-xl border-b border-[#3d494c]/30 shadow-[0_0_15px_rgba(6,182,212,0.1)] flex flex-wrap justify-between items-center w-full px-4 md:px-6 py-2 sticky top-0 z-50 shrink-0 gap-y-2">
+        <div className="flex items-center gap-3 md:gap-6 w-full md:w-auto justify-between md:justify-start">
+          <div className="flex items-center gap-3">
+            <button className="md:hidden text-[#06b6d4] p-1" onClick={() => setShowMobileSidebar(true)}>
+              <Menu className="w-5 h-5" />
+            </button>
+            <h1 className="font-bold text-base md:text-xl tracking-tighter text-[#06b6d4]">DATA_OS // COMMAND_CENTER</h1>
+          </div>
+          
+          <div className="flex md:hidden items-center gap-3 pl-3 border-l border-[#3d494c]/30">
+            <button onClick={() => setShowSchema(!showSchema)} className={`p-1 rounded transition-colors ${showSchema ? 'text-[#06b6d4]' : 'text-[#869397] hover:text-[#06b6d4]'}`} title="Toggle Schema">
+               <Database className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+        
+        <div className="flex items-center justify-between w-full md:w-auto gap-4">
+          <div className="flex md:hidden flex-1 items-center gap-2 bg-[#2a2a2a] px-3 py-1.5 rounded-lg border border-[#3d494c]/30">
+            <Database className="text-[#06b6d4] w-4 h-4 shrink-0" />
+            <select 
+              value={selectedDB}
+              onChange={(e) => {
+                const db = e.target.value as DBType;
+                setSelectedDB(db);
+                setQuery(DEFAULT_QUERIES[db]);
+                setResults(null);
+                setError(null);
+              }}
+              className="bg-transparent outline-none font-mono text-xs text-[#bcc9cd] cursor-pointer appearance-none pr-4 w-full"
+            >
+              <option value="ecommerce">ecommerce.db</option>
+              <option value="hr">hr.db</option>
+              <option value="sales">sales.db</option>
+            </select>
+          </div>
+          
           <div className="hidden md:flex items-center gap-2 bg-[#2a2a2a] px-3 py-1.5 rounded-lg border border-[#3d494c]/30 hover:border-[#06b6d4]/50 transition-colors">
             <Database className="text-[#06b6d4] w-4 h-4" />
             <select 
@@ -353,18 +386,16 @@ export function SqlPlayground() {
               <option value="sales">sales.db</option>
             </select>
           </div>
-        </div>
-        
-        <div className="flex items-center gap-4">
+
           <button 
             onClick={runQuery}
             disabled={isRunning}
-            className="bg-[#06b6d4] text-[#003640] font-mono px-6 py-2 text-sm font-bold uppercase tracking-wider rounded-sm cyan-glow active:scale-95 transition-all shadow-[0_0_10px_rgba(6,182,212,0.3)] disabled:opacity-50"
+            className="bg-[#06b6d4] text-[#003640] font-mono px-4 md:px-6 py-1.5 md:py-2 text-xs md:text-sm font-bold uppercase tracking-wider rounded-sm cyan-glow active:scale-95 transition-all shadow-[0_0_10px_rgba(6,182,212,0.3)] disabled:opacity-50 shrink-0"
           >
             {isRunning ? 'EXECUTING...' : 'RUN_QUERY'}
           </button>
           
-          <div className="flex items-center gap-3 pl-4 border-l border-[#3d494c]/30">
+          <div className="hidden md:flex items-center gap-3 pl-4 border-l border-[#3d494c]/30">
              <button onClick={() => setShowSchema(!showSchema)} className={`p-1.5 rounded transition-colors ${showSchema ? 'text-[#06b6d4]' : 'text-[#869397] hover:text-[#06b6d4]'}`} title="Toggle Schema">
                <Database className="w-5 h-5" />
              </button>
@@ -446,10 +477,13 @@ export function SqlPlayground() {
                   initial={{ width: 0, opacity: 0 }}
                   animate={{ width: 320, opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
-                  className="glass-panel border-y-0 border-r-0 flex flex-col shrink-0"
+                  className="absolute md:relative right-0 top-0 bottom-0 z-50 h-full w-full max-w-[320px] glass-panel border-y-0 border-r-0 flex flex-col shrink-0"
                 >
                   <div className="p-3 border-b border-[#3d494c]/30 bg-[#201f1f] flex items-center justify-between">
                     <span className="font-mono text-xs font-bold tracking-widest text-[#bcc9cd]">SCHEMA_EXPLORER</span>
+                    <button onClick={() => setShowSchema(false)} className="md:hidden text-[#869397] hover:text-white transition-colors">
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
                   <div className="flex-1 overflow-y-auto sql-scrollbar p-3 space-y-2">
                     {Object.entries(SCHEMAS[selectedDB]).map(([table, columns]) => {
@@ -508,8 +542,8 @@ export function SqlPlayground() {
 
           {/* Bottom Results Section */}
           <section style={{ height: `${(1 - splitRatio) * 100}%` }} className="glass-panel border-x-0 border-b-0 flex flex-col overflow-hidden shrink-0 min-h-[100px]">
-            <div className="flex items-center justify-between px-4 pt-2 border-b border-[#3d494c]/30 bg-[#201f1f]/50 shrink-0">
-              <div className="flex items-center gap-6">
+            <div className="flex items-center justify-between px-4 pt-2 border-b border-[#3d494c]/30 bg-[#201f1f]/50 shrink-0 overflow-x-auto sql-scrollbar">
+              <div className="flex items-center gap-6 shrink-0">
                 <button 
                   onClick={() => setActiveResultTab('results')}
                   className={`flex items-center gap-2 font-mono text-[11px] font-bold tracking-widest pb-2 border-b-2 transition-colors ${activeResultTab === 'results' ? 'border-[#06b6d4] text-[#06b6d4]' : 'border-transparent text-[#bcc9cd] hover:text-[#06b6d4]'}`}
@@ -775,6 +809,38 @@ export function SqlPlayground() {
                   </div>
                 ))}
               </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Sidebar Slide-over */}
+      <AnimatePresence>
+        {showMobileSidebar && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowMobileSidebar(false)} className="absolute inset-0 z-[90] bg-black/60 backdrop-blur-sm md:hidden" />
+            <motion.div 
+              initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="absolute top-0 left-0 bottom-0 w-64 bg-[#131313] border-r border-[#3d494c] shadow-2xl z-[100] flex flex-col md:hidden"
+            >
+              <div className="flex items-center justify-between p-4 border-b border-[#3d494c]/50">
+                <div className="flex items-center gap-2">
+                  <Terminal className="text-[#06b6d4] w-5 h-5" />
+                  <span className="font-mono text-xs font-bold text-[#06b6d4]">NODE_01</span>
+                </div>
+                <button onClick={() => setShowMobileSidebar(false)} className="text-[#869397] hover:text-white transition-colors"><X className="w-5 h-5" /></button>
+              </div>
+              <nav className="flex flex-col gap-2 p-4">
+                <button className="flex items-center gap-3 p-3 text-[#06b6d4] bg-[#06b6d4]/10 rounded-lg font-mono text-sm" onClick={() => setShowMobileSidebar(false)}>
+                  <Code2 className="w-4 h-4" /> Workspace
+                </button>
+                <button className="flex items-center gap-3 p-3 text-[#869397] hover:bg-[#353534]/50 hover:text-[#06b6d4] rounded-lg font-mono text-sm transition-colors" onClick={() => { setShowSaved(true); setShowMobileSidebar(false); }}>
+                  <Bookmark className="w-4 h-4" /> Saved Queries
+                </button>
+                <button className="flex items-center gap-3 p-3 text-[#869397] hover:bg-[#353534]/50 hover:text-[#06b6d4] rounded-lg font-mono text-sm transition-colors" onClick={() => { setShowHistory(true); setShowMobileSidebar(false); }}>
+                  <History className="w-4 h-4" /> History
+                </button>
+              </nav>
             </motion.div>
           </>
         )}
