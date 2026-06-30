@@ -12,6 +12,8 @@ import {
   Database, BarChart2, Code2, Trophy, Users, BookOpen,
   CheckCircle2, XCircle, ChevronDown, Terminal, SquareTerminal, Cloud, Server, Zap, Network, Archive, Activity, Box, Workflow, Repeat, Shield, Layers, ArrowRight, Play
 } from "lucide-react";
+import { ProjectCard } from "@/features/projects/components/ProjectCard";
+import { BlogCard } from "@/features/blog/components/BlogCard";
 import Link from "next/link";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { useRef, useState, useEffect } from "react";
@@ -60,6 +62,66 @@ function AnimatedCounter({ end, suffix = "" }: { end: number, suffix?: string })
 
   return <span ref={ref}>{count}{suffix}</span>;
 }
+
+const FEATURED_PROJECTS = [
+  {
+    slug: "netflix-etl-pipeline",
+    title: "Netflix-Style Content ETL Pipeline",
+    difficulty: "intermediate",
+    stack: ["Python", "Pandas", "PostgreSQL", "Airflow", "Docker"],
+    estimatedHours: 6,
+    coverImage: "🎬",
+    description: "Build an ETL pipeline that ingests raw viewing data, cleans and transforms it, and loads it into a PostgreSQL warehouse."
+  },
+  {
+    slug: "spotify-data-pipeline",
+    title: "Spotify-Style Listening Analytics Pipeline",
+    difficulty: "intermediate",
+    stack: ["Python", "Apache Kafka", "Spark Streaming", "MongoDB"],
+    estimatedHours: 8,
+    coverImage: "🎧",
+    description: "Simulate a real-time listening event pipeline with Spark Structured Streaming aggregating listens per artist."
+  },
+  {
+    slug: "sales-analytics-dashboard",
+    title: "End-to-End Sales Analytics Dashboard",
+    difficulty: "beginner",
+    stack: ["Python", "SQL", "Pandas", "Plotly"],
+    estimatedHours: 4,
+    coverImage: "📊",
+    description: "A beginner-friendly project — ingest sales CSV data, run SQL transformations, build a Streamlit dashboard."
+  }
+];
+
+const FEATURED_BLOGS = [
+  {
+    slug: "why-sql-still-matters-2026",
+    title: "Why SQL Is Still the #1 Skill for Data Engineers in 2026",
+    excerpt: "The enduring relevance of SQL despite new tools, real job posting stats, and how SQL skills transfer.",
+    category: "career",
+    date: "2026-06-25",
+    readingTime: "5 min read",
+    coverImage: "🗄️"
+  },
+  {
+    slug: "spark-vs-pandas",
+    title: "Spark vs Pandas: When Do You Actually Need Distributed Computing?",
+    excerpt: "Practical guidance on the data size threshold, common misconceptions, and the migration path.",
+    category: "spark",
+    date: "2026-06-20",
+    readingTime: "6 min read",
+    coverImage: "⚡"
+  },
+  {
+    slug: "airflow-best-practices",
+    title: "5 Airflow DAG Best Practices for Production Pipelines",
+    excerpt: "Idempotency, avoiding XCom for large data, retry strategies, and sensor patterns.",
+    category: "tutorials",
+    date: "2026-06-15",
+    readingTime: "4 min read",
+    coverImage: "🛠️"
+  }
+];
 
 export default function LandingPage() {
   return (
@@ -302,6 +364,82 @@ export default function LandingPage() {
                   </GlassPanel>
                 </motion.div>
               )})}
+            </div>
+          </div>
+        </section>
+
+        {/* 4.5 PROJECTS TEASER SECTION */}
+        <section className="py-24 md:py-32 border-t border-white/[0.05] relative">
+          <div className="container mx-auto px-4 max-w-[1200px]">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 relative z-10">
+              <div>
+                <motion.h2 {...scrollReveal} className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 pb-2 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
+                  Build Real Projects.
+                </motion.h2>
+                <motion.p {...scrollReveal} className="text-lg text-zinc-400 font-light tracking-tight max-w-xl">
+                  Apply what you've learned to real-world data engineering scenarios.
+                </motion.p>
+              </div>
+              <motion.div {...scrollReveal} className="mt-6 md:mt-0">
+                <Link href="/projects">
+                  <Button variant="ghost" className="text-primary hover:bg-primary/10 hover:text-primary">
+                    View All Projects <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </motion.div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {FEATURED_PROJECTS.map((project, i) => (
+                <motion.div
+                  key={project.slug}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                >
+                  <ProjectCard project={project} />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4.6 BLOG TEASER SECTION */}
+        <section className="py-24 md:py-32 border-t border-white/[0.05] relative">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(76,215,246,0.03),transparent_70%)] -z-10 pointer-events-none" />
+          <div className="container mx-auto px-4 max-w-[1200px]">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 relative z-10">
+              <div>
+                <motion.h2 {...scrollReveal} className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 pb-2 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
+                  Latest from the Blog.
+                </motion.h2>
+                <motion.p {...scrollReveal} className="text-lg text-zinc-400 font-light tracking-tight max-w-xl">
+                  Insights on data engineering, career advice, and tutorials.
+                </motion.p>
+              </div>
+              <motion.div {...scrollReveal} className="mt-6 md:mt-0">
+                <Link href="/blog">
+                  <Button variant="ghost" className="text-primary hover:bg-primary/10 hover:text-primary">
+                    Read More <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </motion.div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {FEATURED_BLOGS.map((blog, i) => (
+                <motion.div
+                  key={blog.slug}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="h-full"
+                >
+                  <BlogCard post={blog as any} />
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>

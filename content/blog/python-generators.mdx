@@ -1,0 +1,26 @@
+---
+title: "Python Generators for Large Files"
+excerpt: "How to process massive text files in Python without running out of memory."
+date: "2026-06-26"
+category: "Python"
+tags: ["python", "performance", "generators"]
+coverImage: "🐍"
+---
+
+
+If you try to read a 10GB log file into a list in Python using `.readlines()`, your script will crash. The solution? Generators.
+
+### The `yield` Keyword
+
+Generators compute values on the fly and only keep one value in memory at a time.
+
+```python
+def read_large_file(file_path):
+    with open(file_path, 'r') as file:
+        for line in file:
+            yield line.strip()
+
+for line in read_large_file("huge_logs.txt"):
+    process(line)
+```
+

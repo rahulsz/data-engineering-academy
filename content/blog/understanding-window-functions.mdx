@@ -1,0 +1,32 @@
+---
+title: "Demystifying SQL Window Functions"
+excerpt: "A deep dive into ROW_NUMBER, RANK, and DENSE_RANK with real-world examples."
+date: "2026-06-30"
+category: "SQL"
+tags: ["sql", "window-functions", "analytics"]
+coverImage: "📊"
+---
+
+
+Window functions are one of the most powerful tools in a data engineer's arsenal. Unlike aggregate functions that collapse rows into a single result, window functions operate on a set of rows and return a single value for each row from the underlying query.
+
+### The Problem
+
+Imagine you want to find the top 3 highest-paid employees in each department. A simple `GROUP BY` won't work because it collapses the employee details.
+
+### The Solution: ROW_NUMBER()
+
+```sql
+WITH RankedEmployees AS (
+  SELECT 
+    name, 
+    department, 
+    salary,
+    ROW_NUMBER() OVER(PARTITION BY department ORDER BY salary DESC) as rank
+  FROM employees
+)
+SELECT * FROM RankedEmployees WHERE rank <= 3;
+```
+
+<Callout type="tip">Always remember the OVER clause: `OVER(PARTITION BY ... ORDER BY ...)`</Callout>
+

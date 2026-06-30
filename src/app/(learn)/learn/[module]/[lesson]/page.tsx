@@ -28,6 +28,27 @@ const components = {
   VisualizerEmbed,
   QuizEmbed,
   FlashcardEmbed,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pre: (props: any) => {
+    const codeElement = props.children;
+    if (codeElement?.props?.className?.includes('language-')) {
+      const languageClass = codeElement.props.className;
+      const language = languageClass.replace("language-", "") || "text";
+      return <CodeBlock language={language}>{codeElement.props.children}</CodeBlock>;
+    }
+    // Mac-Style Terminal Block
+    return (
+      <div className="relative my-8 rounded-xl overflow-hidden border border-border bg-background shadow-2xl">
+        {/* Mac Window Controls */}
+        <div className="h-8 border-b border-border flex items-center px-4 gap-2 bg-card">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+        </div>
+        <pre className="p-4 overflow-x-auto font-mono text-sm leading-relaxed text-slate-300" {...props} />
+      </div>
+    );
+  },
   h1: (props: any) => <h1 className="text-3xl md:text-4xl font-display font-bold mt-10 mb-6 text-white tracking-tight" {...props} />,
   h2: (props: any) => <h2 className="text-2xl font-display font-bold mt-12 mb-4 text-white border-b border-border pb-2 tracking-tight" {...props} />,
   h3: (props: any) => <h3 className="text-xl font-display font-semibold mt-8 mb-3 text-cyan-50" {...props} />,
@@ -45,19 +66,7 @@ const components = {
        return <code {...props} />;
     }
     return <code className="bg-background border border-border text-cyan-300 px-1.5 py-0.5 rounded font-mono text-[0.85em] shadow-sm" {...props} />;
-  },
-  // Mac-Style Terminal Block
-  pre: (props: any) => (
-    <div className="relative my-8 rounded-xl overflow-hidden border border-border bg-background shadow-2xl">
-      {/* Mac Window Controls */}
-      <div className="h-8 border-b border-border flex items-center px-4 gap-2 bg-card">
-        <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-        <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-        <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-      </div>
-      <pre className="p-4 overflow-x-auto font-mono text-sm leading-relaxed text-slate-300" {...props} />
-    </div>
-  )
+  }
 };
 
 export default async function LessonPage({ params }: { params: Promise<{ module: string, lesson: string }> }) {

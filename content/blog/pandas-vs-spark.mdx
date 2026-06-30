@@ -1,0 +1,22 @@
+---
+title: "Pandas vs PySpark: When to use which?"
+excerpt: "Understanding the breaking point of Pandas and when to scale out with Spark."
+date: "2026-06-28"
+category: "Python"
+tags: ["python", "pandas", "spark", "big-data"]
+coverImage: "⚡"
+---
+
+
+A common question in data engineering interviews is: "When do you switch from Pandas to PySpark?"
+
+### Pandas: The Single-Node King
+
+Pandas is incredible for data manipulation. It's fast, expressive, and easy to use. However, Pandas must load the entire dataset into RAM on a single machine. If you have a 16GB RAM laptop and try to read a 20GB CSV, Pandas will crash with an OutOfMemory error.
+
+### PySpark: The Distributed Engine
+
+PySpark is built for distributed computing. It partitions data across hundreds of machines. You can process petabytes of data without running out of memory.
+
+<Callout type="warning">Don't use Spark for small datasets (e.g., 100MB). The overhead of distributing tasks will make it significantly slower than Pandas.</Callout>
+

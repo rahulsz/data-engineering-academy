@@ -1,0 +1,372 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Data Ops Academy | The Path to Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#353534",
+                    "surface-tint": "#4cd7f6",
+                    "inverse-primary": "#00687a",
+                    "error-container": "#93000a",
+                    "secondary-container": "#0566d9",
+                    "outline": "#869397",
+                    "surface-bright": "#3a3939",
+                    "on-secondary": "#002e6a",
+                    "secondary": "#adc6ff",
+                    "on-background": "#e5e2e1",
+                    "primary-container": "#06b6d4",
+                    "on-tertiary-container": "#2f3d4f",
+                    "tertiary-fixed-dim": "#b9c8de",
+                    "on-secondary-container": "#e6ecff",
+                    "on-tertiary-fixed-variant": "#39485a",
+                    "surface-container-high": "#2a2a2a",
+                    "tertiary-fixed": "#d4e4fa",
+                    "on-secondary-fixed-variant": "#004395",
+                    "primary-fixed-dim": "#4cd7f6",
+                    "on-primary-fixed-variant": "#004e5c",
+                    "outline-variant": "#3d494c",
+                    "on-surface-variant": "#bcc9cd",
+                    "surface-container-low": "#1c1b1b",
+                    "surface-dim": "#131313",
+                    "tertiary-container": "#99a8bd",
+                    "surface": "#131313",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed": "#001f26",
+                    "background": "#131313",
+                    "on-primary-container": "#00424f",
+                    "on-primary": "#003640",
+                    "inverse-on-surface": "#313030",
+                    "on-secondary-fixed": "#001a42",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "tertiary": "#b9c8de",
+                    "on-error": "#690005",
+                    "primary-fixed": "#acedff",
+                    "surface-variant": "#353534",
+                    "on-tertiary-fixed": "#0d1c2d",
+                    "on-surface": "#e5e2e1",
+                    "surface-container": "#201f1f",
+                    "inverse-surface": "#e5e2e1",
+                    "on-tertiary": "#233143",
+                    "secondary-fixed": "#d8e2ff",
+                    "primary": "#4cd7f6",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0e0e0e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "xs": "4px",
+                    "xl": "80px",
+                    "sm": "12px",
+                    "base": "8px",
+                    "lg": "48px",
+                    "grid-unit": "20px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "code-data": ["JetBrains Mono"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "code-data": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #000000;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+
+        .technical-grid {
+            background-image: 
+                linear-gradient(to right, rgba(76, 215, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(76, 215, 246, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(76, 215, 246, 0.2), transparent);
+            position: fixed;
+            top: 0;
+            z-index: 100;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .node-pulse {
+            animation: pulse-border 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(76, 215, 246, 0.4); }
+            50% { box-shadow: 0 0 20px 4px rgba(76, 215, 246, 0.2); }
+        }
+
+        .s-curve-svg {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glass-panel {
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(12px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .active-glow {
+            filter: drop-shadow(0 0 8px rgba(76, 215, 246, 0.6));
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md select-none">
+<div class="scanline"></div>
+<div class="fixed inset-0 technical-grid pointer-events-none"></div>
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-md h-16 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary" data-icon="terminal">terminal</span>
+<h1 class="font-label-caps text-label-caps tracking-[0.2em] text-primary">DATA OPS ACADEMY</h1>
+</div>
+<div class="flex items-center gap-sm">
+<span class="font-label-caps text-label-caps text-primary tracking-widest bg-primary/10 px-sm py-xs rounded border border-primary/20">MISSION: ACTIVE</span>
+</div>
+</header>
+<!-- Side Navigation / XP Overlay (Desktop Viewport Focus) -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col pt-20 pb-md px-md hidden md:flex">
+<div class="glass-panel p-md rounded-xl w-72 flex flex-col gap-md">
+<div class="flex items-center gap-sm">
+<div class="w-12 h-12 rounded bg-surface-container-high border border-white/10 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A stylized, high-tech cyberpunk profile portrait of a data engineer in a dark techwear hoodie, featuring glowing cyan interface elements reflecting on a futuristic visor. Cinematic lighting, deep obsidian tones, hyper-detailed digital art style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBedeuwzTfBTFB63ejtSqzt8B0js2sqS_hiASMBgs59C86HBB3p9K2qZiG_kLeDOiYhbjHHtzAq4cY6PCPtXFHsHn-e3K_kEa3vw15lI_ak2f3nB-Zg1UTWAn0cWU1uCWcJeBcVtwSMeqpx8UO5u-0K8T5JyzSi_d43T0jifQ453l9f2gpJP2PoD4fnurZ-JtQIXwGnbcLK2ST7rpb2Us4s9wmD19v6d-uYC1pnQJPwsbQ2inhwdSUW6ojFS3lxQ9_9TtPrDTFZq-M"/>
+</div>
+<div>
+<h2 class="font-label-caps text-label-caps text-primary">OPERATOR_01</h2>
+<p class="font-code-data text-code-data text-on-surface-variant">LVL 42 ARCHITECT</p>
+</div>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between items-end font-code-data text-code-data">
+<span class="text-on-surface-variant">PROGRESS</span>
+<span class="text-primary">8,400 XP</span>
+</div>
+<div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-right from-secondary-container to-primary w-[75%] relative overflow-hidden">
+<div class="absolute inset-0 bg-white/20 animate-[pulse_1s_infinite]"></div>
+</div>
+</div>
+</div>
+<nav class="mt-md flex flex-col gap-xs">
+<button class="flex items-center gap-base px-sm py-base text-primary bg-primary/10 border-r-2 border-primary transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-code-data text-code-data">Command Center</span>
+</button>
+<button class="flex items-center gap-base px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-code-data text-code-data">Skill Tree</span>
+</button>
+<button class="flex items-center gap-base px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-code-data text-code-data">Mission Logs</span>
+</button>
+<button class="flex items-center gap-base px-sm py-base text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="code">code</span>
+<span class="font-code-data text-code-data">Terminal</span>
+</button>
+</nav>
+</div>
+</aside>
+<!-- Main Roadmap Content -->
+<main class="relative pt-32 pb-xl px-md md:ml-80">
+<div class="max-w-2xl mx-auto relative min-h-[1200px]">
+<!-- SVG Path Background -->
+<svg class="s-curve-svg h-full w-[400px]" fill="none" viewbox="0 0 400 1200" xmlns="http://www.w3.org/2000/svg">
+<path d="M200 0C200 100 350 150 350 250C350 350 200 400 200 500C200 600 50 650 50 750C50 850 200 900 200 1000" stroke="url(#cyan-gradient)" stroke-dasharray="8 8" stroke-width="2"></path>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="cyan-gradient" x1="200" x2="200" y1="0" y2="1000">
+<stop stop-color="#4cd7f6"></stop>
+<stop offset="0.5" stop-color="#4cd7f6" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="#353534"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Foundation: Completed -->
+<div class="relative flex justify-center mb-xl" style="top: 150px; left: 150px;">
+<div class="group flex flex-col items-center">
+<button class="w-16 h-16 rounded-full bg-primary flex items-center justify-center border-4 border-black shadow-[0_0_20px_rgba(76,215,246,0.6)] transition-transform hover:scale-110 active:scale-95">
+<span class="material-symbols-outlined text-on-primary text-3xl font-bold" data-icon="check">check</span>
+</button>
+<div class="mt-sm text-center">
+<span class="font-label-caps text-label-caps text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/30">MODULE 01</span>
+<h3 class="font-headline-sm text-headline-sm mt-xs">Foundation: Python for Data</h3>
+<p class="font-code-data text-code-data text-on-surface-variant">COMPLETED // 2,500 XP EARNED</p>
+</div>
+</div>
+</div>
+<!-- Orchestration: Active -->
+<div class="relative flex justify-center mb-xl" style="top: 300px; left: 0px;">
+<div class="group flex flex-col items-center">
+<div class="relative">
+<div class="absolute inset-0 rounded-full node-pulse opacity-50"></div>
+<button class="relative w-20 h-20 rounded-full bg-surface-container-high flex items-center justify-center border-2 border-primary shadow-[0_0_15px_rgba(76,215,246,0.3)] transition-all hover:border-white group-hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="terminal">terminal</span>
+</button>
+<div class="absolute -top-2 -right-2 bg-primary text-on-primary px-2 py-0.5 rounded text-[10px] font-bold animate-bounce">ACTIVE</div>
+</div>
+<div class="mt-sm text-center">
+<span class="font-label-caps text-label-caps text-primary bg-primary/20 px-2 py-0.5 rounded">MODULE 02</span>
+<h3 class="font-headline-sm text-headline-sm mt-xs">Pipeline Orchestration</h3>
+<p class="font-code-data text-code-data text-on-surface-variant">IN PROGRESS // 45% SYNCED</p>
+</div>
+</div>
+</div>
+<!-- Distributed: Locked -->
+<div class="relative flex justify-center mb-xl" style="top: 450px; left: -150px;">
+<div class="group flex flex-col items-center opacity-60 filter grayscale">
+<button class="w-16 h-16 rounded-full glass-panel flex items-center justify-center border border-white/20 transition-all cursor-not-allowed">
+<span class="material-symbols-outlined text-outline text-2xl" data-icon="lock">lock</span>
+</button>
+<div class="mt-sm text-center">
+<span class="font-label-caps text-label-caps text-outline border border-outline/30 px-2 py-0.5 rounded">MODULE 03</span>
+<h3 class="font-headline-sm text-headline-sm mt-xs text-outline">Distributed Systems</h3>
+<p class="font-code-data text-code-data text-outline">LOCKED // REQUIRES LVL 45</p>
+</div>
+</div>
+</div>
+<!-- Data Mesh: Locked -->
+<div class="relative flex justify-center mb-xl" style="top: 600px; left: 0px;">
+<div class="group flex flex-col items-center opacity-40 filter grayscale">
+<button class="w-16 h-16 rounded-full glass-panel flex items-center justify-center border border-white/20 transition-all cursor-not-allowed">
+<span class="material-symbols-outlined text-outline text-2xl" data-icon="lock">lock</span>
+</button>
+<div class="mt-sm text-center">
+<span class="font-label-caps text-label-caps text-outline border border-outline/30 px-2 py-0.5 rounded">MODULE 04</span>
+<h3 class="font-headline-sm text-headline-sm mt-xs text-outline">Data Mesh Architecture</h3>
+<p class="font-code-data text-code-data text-outline">LOCKED // REQUIRES MODULE 03</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (Contextual for Home/Mission) -->
+<button class="fixed bottom-24 right-md z-50 w-14 h-14 bg-primary text-on-primary rounded-full shadow-[0_0_20px_rgba(76,215,246,0.4)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all md:hidden">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</button>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center py-sm md:hidden bg-surface-container-lowest/80 backdrop-blur-lg border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+<button class="flex flex-col items-center gap-1 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-[10px]">HOME</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary drop-shadow-[0_0_8px_rgba(76,215,246,0.6)] scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="terminal" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span class="font-label-caps text-[10px]">COMMAND</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+<span class="font-label-caps text-[10px]">MISSIONS</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-[10px]">PROFILE</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction: Update scanline position slightly on scroll
+        window.addEventListener('scroll', () => {
+            const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            const path = document.querySelector('path');
+            if (path) {
+                const length = path.getTotalLength();
+                path.style.strokeDashoffset = length * (1 - scrollPercent);
+            }
+        });
+
+        // Add subtle mouse-tracking glow effect
+        document.addEventListener('mousemove', (e) => {
+            const nodes = document.querySelectorAll('button');
+            nodes.forEach(node => {
+                const rect = node.getBoundingClientRect();
+                const dx = e.clientX - (rect.left + rect.width / 2);
+                const dy = e.clientY - (rect.top + rect.height / 2);
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < 200) {
+                    const intensity = (1 - dist / 200) * 0.3;
+                    node.style.boxShadow = `0 0 20px rgba(76, 215, 246, ${intensity})`;
+                }
+            });
+        });
+    </script>
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-md">
+<div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+<div class="relative glass-panel backdrop-blur-xl bg-surface/40 border border-white/10 rounded-xl w-full max-w-md p-md shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+<button class="absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="flex flex-col gap-md">
+<div>
+<span class="font-label-caps text-label-caps text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">MODULE 02</span>
+<h2 class="font-headline-sm text-headline-sm mt-xs">Pipeline Orchestration</h2>
+</div>
+<div class="flex gap-md">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">timer</span>
+<span class="font-code-data text-code-data">45m</span>
+</div>
+<div class="flex items-center gap-xs text-primary">
+<span class="material-symbols-outlined text-sm">bolt</span>
+<span class="font-code-data text-code-data">1,200 XP</span>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant">
+        Master the deployment and management of automated data pipelines using industry-standard orchestration tools.
+      </p>
+<button class="w-full py-sm bg-primary text-on-primary font-label-caps tracking-widest rounded shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-[1.02] active:scale-95 transition-all">
+        START MISSION
+      </button>
+</div>
+</div>
+</div></body></html>

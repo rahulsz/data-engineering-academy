@@ -1,4 +1,4 @@
-import { PythonPlayground } from '@/features/playground/python/PythonPlayground';
+import { PythonPlaygroundWrapper } from '@/features/playground/python/PythonPlaygroundWrapper';
 
 export const metadata = {
   title: 'Python Playground — DataEngineering.Academy',
@@ -8,7 +8,7 @@ export const metadata = {
 export default function PythonPlaygroundPage() {
   return (
     <div className="h-[calc(100vh-56px)]">
-      <PythonPlayground />
+      <PythonPlaygroundWrapper />
     </div>
   );
 }

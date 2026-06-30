@@ -1,7 +1,19 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Editor, { useMonaco } from '@monaco-editor/react';
+import Editor, { useMonaco, loader } from '@monaco-editor/react';
+
+// Next.js 15+ catches all unhandled rejections and shows an error overlay.
+// Monaco Editor throws a raw object { msg: 'operation is manually canceled', type: 'cancelation' }
+// when unmounted during Strict Mode load. Because it's not an Error instance, Next.js renders it as [object Object].
+// This global listener safely suppresses it from triggering the Next.js Error Overlay.
+if (typeof window !== 'undefined') {
+  window.addEventListener('unhandledrejection', (event) => {
+    if (event.reason && event.reason.type === 'cancelation' && event.reason.msg === 'operation is manually canceled') {
+      event.preventDefault();
+    }
+  });
+}
 import { Play, Terminal, X, Code2, Copy, Download, RefreshCw, Trash2, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

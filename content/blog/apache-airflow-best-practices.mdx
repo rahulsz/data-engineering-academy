@@ -1,0 +1,20 @@
+---
+title: "Apache Airflow Best Practices"
+excerpt: "How to write resilient, idempotent DAGs that don't wake you up at 3 AM."
+date: "2026-06-24"
+category: "Orchestration"
+tags: ["airflow", "dags", "best-practices"]
+coverImage: "🌬️"
+---
+
+
+Airflow is the industry standard for orchestration, but writing bad DAGs is easy.
+
+### 1. Idempotency
+
+Your tasks should produce the same result whether they run once or 100 times. Never use `INSERT` without checking if the data exists. Use `UPSERT` or delete the partition before inserting.
+
+### 2. No Heavy Lifting in the DAG File
+
+The Airflow scheduler parses DAG files constantly. If you put heavy API calls or data processing at the top level of your file (outside a task), you will crash the scheduler.
+

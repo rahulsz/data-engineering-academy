@@ -44,6 +44,7 @@ export function Navbar() {
                 { name: "Practice", href: "/practice" },
                 { name: "Playground", href: "/playground/sql" },
                 { name: "Projects", href: "/projects" },
+                { name: "Blog", href: "/blog" },
               ].map((item) => (
                 <Link 
                   key={item.name} 
@@ -103,6 +104,8 @@ export function Navbar() {
               <Link href="/learn" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Learn</Link>
               <Link href="/practice" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Practice</Link>
               <Link href="/playground/sql" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Playground</Link>
+              <Link href="/projects" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Projects</Link>
+              <Link href="/blog" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="px-4 py-2 hover:bg-white/5 rounded-lg">Blog</Link>
               <div className="px-4 py-2 mt-2">
                 <CommandMenu />
               </div>

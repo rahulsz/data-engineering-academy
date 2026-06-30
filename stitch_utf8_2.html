@@ -1,0 +1,450 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DATA_OS // COMMAND_CENTER - SQL Playground</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#d4e4fa",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed": "#0d1c2d",
+                    "inverse-primary": "#00687a",
+                    "surface-container": "#201f1f",
+                    "primary-container": "#06b6d4",
+                    "surface-container-high": "#2a2a2a",
+                    "surface": "#131313",
+                    "outline-variant": "#3d494c",
+                    "tertiary-container": "#99a8bd",
+                    "on-surface": "#e5e2e1",
+                    "surface-bright": "#3a3939",
+                    "primary-fixed": "#acedff",
+                    "on-secondary-container": "#e6ecff",
+                    "tertiary-fixed-dim": "#b9c8de",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-tertiary-container": "#2f3d4f",
+                    "on-primary-fixed-variant": "#004e5c",
+                    "on-primary-container": "#00424f",
+                    "surface-tint": "#4cd7f6",
+                    "on-primary-fixed": "#001f26",
+                    "tertiary": "#b9c8de",
+                    "on-tertiary": "#233143",
+                    "on-surface-variant": "#bcc9cd",
+                    "on-secondary-fixed-variant": "#004395",
+                    "background": "#131313",
+                    "primary-fixed-dim": "#4cd7f6",
+                    "inverse-surface": "#e5e2e1",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#39485a",
+                    "surface-dim": "#131313",
+                    "primary": "#4cd7f6",
+                    "surface-container-low": "#1c1b1b",
+                    "secondary": "#adc6ff",
+                    "on-background": "#e5e2e1",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container-highest": "#353534",
+                    "surface-variant": "#353534",
+                    "on-secondary": "#002e6a",
+                    "on-primary": "#003640",
+                    "inverse-on-surface": "#313030",
+                    "secondary-container": "#0566d9",
+                    "outline": "#869397",
+                    "on-secondary-fixed": "#001a42",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-error": "#690005"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "80px",
+                    "sm": "12px",
+                    "md": "24px",
+                    "grid-unit": "20px",
+                    "base": "8px",
+                    "xs": "4px",
+                    "lg": "48px"
+            },
+            "fontFamily": {
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "code-data": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "code-data": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(12px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+        .cyan-glow:hover {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+        .grid-bg {
+            background-image: radial-gradient(rgba(76, 215, 246, 0.05) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(76, 215, 246, 0.2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(76, 215, 246, 0.4);
+        }
+        @keyframes cursor-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .sql-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 18px;
+            background-color: #4cd7f6;
+            animation: cursor-blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col overflow-hidden grid-bg">
+<!-- TopNavBar -->
+<header class="bg-background/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_0_15px_rgba(6,182,212,0.1)] flex justify-between items-center w-full px-md py-sm sticky top-0 z-50">
+<div class="flex items-center gap-md">
+<h1 class="font-display-lg text-headline-sm tracking-tighter text-primary">DATA_OS // COMMAND_CENTER</h1>
+<!-- Database Selector -->
+<div class="hidden md:flex items-center gap-sm bg-surface-container-low px-sm py-xs rounded-lg border border-outline-variant/30 cursor-pointer hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-sm">database</span>
+<span class="font-code-data text-code-data text-on-surface-variant">prod_analytics_v2</span>
+<span class="material-symbols-outlined text-outline text-xs">expand_more</span>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-md font-code-data text-code-data">
+<a class="text-primary border-b-2 border-primary pb-1 transition-colors duration-200" href="#">Query</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Schema</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Pipeline</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Logs</a>
+</nav>
+<div class="flex items-center gap-sm">
+<button class="bg-primary text-on-primary font-code-data px-md py-xs text-sm font-bold uppercase tracking-wider rounded-sm cyan-glow active:scale-95 transition-all shadow-[0_0_10px_rgba(6,182,212,0.3)]">
+                RUN_QUERY
+            </button>
+<div class="flex items-center gap-xs px-sm border-l border-outline-variant/30 ml-sm">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">settings</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">notifications</span>
+<div class="w-8 h-8 rounded-full border border-primary/30 ml-xs overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm2UP162XHhz3Xw_FhFgz0HyTdJf1jZKS9PBMyrzS2NhBO9aDbXMb82LVMmwECR1v8HslPyTcQlEhsyAUZrjXqpivCkwxc4w4y1UTL9e-TG_OuaikNNc56_C8Tp93lWGYlaMxcVBpdhX-FAX9ZtoUlNw4MO9EipmmhuXMltLA2vhQODZCsJc5a3fw0ZS9fN66wyHeaPaQ4ZCtkYQwvLwPy0HfaIqFdE6lAMFsKq1Voyw4j8-Cxc93NwC_ADTti7XNw2JwfWrVpMIc"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="hidden md:flex flex-col items-center py-md gap-lg bg-surface-container-lowest/50 backdrop-blur-lg border-r border-outline-variant/30 w-20 shrink-0">
+<div class="flex flex-col items-center gap-base">
+<div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/40">
+<span class="material-symbols-outlined text-primary">terminal</span>
+</div>
+<span class="text-[10px] font-label-caps text-primary">NODE_01</span>
+</div>
+<nav class="flex flex-col gap-md items-center w-full px-xs">
+<div class="p-xs text-primary bg-primary/10 rounded-lg cursor-pointer transition-all duration-300">
+<span class="material-symbols-outlined" title="Workspace">terminal</span>
+</div>
+<div class="p-xs text-outline hover:bg-surface-variant/50 hover:text-primary cursor-pointer transition-all duration-300">
+<span class="material-symbols-outlined" title="Collections">folder_open</span>
+</div>
+<div class="p-xs text-outline hover:bg-surface-variant/50 hover:text-primary cursor-pointer transition-all duration-300">
+<span class="material-symbols-outlined" title="Snippets">code</span>
+</div>
+<div class="p-xs text-outline hover:bg-surface-variant/50 hover:text-primary cursor-pointer transition-all duration-300">
+<span class="material-symbols-outlined" title="History">history</span>
+</div>
+</nav>
+<div class="mt-auto">
+<div class="w-8 h-8 rounded-full border border-outline/30 flex items-center justify-center hover:border-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-outline text-sm">add</span>
+</div>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- Breadcrumbs Bar -->
+<div class="h-10 glass-panel border-0 border-b flex items-center px-md justify-between">
+<div class="flex items-center gap-sm font-code-data text-[12px] text-on-surface-variant">
+<span class="hover:text-primary cursor-pointer">workspace</span>
+<span class="text-outline-variant">/</span>
+<span class="hover:text-primary cursor-pointer">queries</span>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface">customer_lifetime_value.sql</span>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+<span class="font-label-caps text-[10px] text-green-500">SESSION: ACTIVE</span>
+</div>
+<span class="material-symbols-outlined text-outline text-sm hover:text-primary cursor-pointer">save</span>
+<span class="material-symbols-outlined text-outline text-sm hover:text-primary cursor-pointer">share</span>
+</div>
+</div>
+<!-- Editor Split View -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Code Editor Area -->
+<section class="flex-1 bg-surface-container-lowest relative flex flex-col min-w-0 border-r border-outline-variant/30 overflow-hidden">
+<div class="flex-1 flex overflow-auto font-code-data text-code-data p-md leading-relaxed selection:bg-primary/30">
+<div class="text-outline-variant select-none pr-md border-r border-outline-variant/10 mr-md text-right min-w-[3rem] opacity-50">
+                            1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12
+                        </div>
+<div class="flex-1 whitespace-pre outline-none" contenteditable="true" spellcheck="false">
+<span class="text-secondary">SELECT</span>
+  c.customer_id,
+  c.name,
+  <span class="text-secondary">SUM</span>(o.amount) <span class="text-secondary">AS</span> total_spent,
+  <span class="text-secondary">COUNT</span>(o.order_id) <span class="text-secondary">AS</span> order_count
+<span class="text-secondary">FROM</span> customers c
+<span class="text-secondary">JOIN</span> orders o <span class="text-secondary">ON</span> c.customer_id = o.customer_id
+<span class="text-secondary">WHERE</span> o.status = <span class="text-primary">'COMPLETED'</span>
+<span class="text-secondary">GROUP BY</span> 1, 2
+<span class="text-secondary">ORDER BY</span> total_spent <span class="text-secondary">DESC</span>
+<span class="text-secondary">LIMIT</span> <span class="text-primary">10</span>;<span class="sql-cursor"></span></div>
+</div>
+</section>
+<!-- Schema Explorer -->
+<aside class="w-80 glass-panel border-y-0 border-r-0 flex flex-col shrink-0">
+<div class="p-sm border-b border-outline-variant/30 bg-surface-container flex items-center justify-between">
+<span class="font-label-caps text-on-surface-variant">SCHEMA_EXPLORER</span>
+<span class="material-symbols-outlined text-outline text-sm hover:text-primary cursor-pointer">filter_list</span>
+</div>
+<div class="flex-1 overflow-y-auto p-sm space-y-sm">
+<!-- Table: Customers -->
+<div class="group schema-tree-item">
+<div class="flex items-center gap-xs py-1 cursor-pointer hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm text-primary toggle-icon">keyboard_arrow_down</span>
+<span class="material-symbols-outlined text-sm text-outline group-hover:text-primary">table_chart</span>
+<span class="font-code-data text-sm">customers</span>
+</div>
+<div class="pl-8 space-y-1 mt-1 border-l border-outline-variant/20 ml-2 tree-content">
+<div class="flex justify-between items-center text-[12px] font-code-data text-on-surface-variant hover:text-on-surface">
+<span>customer_id</span>
+<span class="text-outline/50 uppercase">int64</span>
+</div>
+<div class="flex justify-between items-center text-[12px] font-code-data text-on-surface-variant hover:text-on-surface">
+<span>name</span>
+<span class="text-outline/50 uppercase">string</span>
+</div>
+<div class="flex justify-between items-center text-[12px] font-code-data text-on-surface-variant hover:text-on-surface">
+<span>email</span>
+<span class="text-outline/50 uppercase">string</span>
+</div>
+<div class="flex justify-between items-center text-[12px] font-code-data text-on-surface-variant hover:text-on-surface">
+<span>signup_date</span>
+<span class="text-outline/50 uppercase">timestamp</span>
+</div>
+</div>
+</div>
+<!-- Table: Orders -->
+<div class="group schema-tree-item">
+<div class="flex items-center gap-xs py-1 cursor-pointer hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm text-primary toggle-icon">keyboard_arrow_down</span>
+<span class="material-symbols-outlined text-sm text-outline group-hover:text-primary">table_chart</span>
+<span class="font-code-data text-sm">orders</span>
+</div>
+<div class="pl-8 space-y-1 mt-1 border-l border-outline-variant/20 ml-2 tree-content">
+<div class="flex justify-between items-center text-[12px] font-code-data text-on-surface-variant hover:text-on-surface">
+<span>order_id</span>
+<span class="text-outline/50 uppercase">int64</span>
+</div>
+<div class="flex justify-between items-center text-[12px] font-code-data text-on-surface-variant hover:text-on-surface">
+<span>amount</span>
+<span class="text-outline/50 uppercase">decimal</span>
+</div>
+<div class="flex justify-between items-center text-[12px] font-code-data text-on-surface-variant hover:text-on-surface">
+<span>status</span>
+<span class="text-outline/50 uppercase">string</span>
+</div>
+</div>
+</div>
+<!-- Table: Products -->
+<div class="group schema-tree-item">
+<div class="flex items-center gap-xs py-1 cursor-pointer hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm text-outline toggle-icon">keyboard_arrow_right</span>
+<span class="material-symbols-outlined text-sm text-outline group-hover:text-primary">table_chart</span>
+<span class="font-code-data text-sm">products</span>
+</div>
+<div class="pl-8 space-y-1 mt-1 border-l border-outline-variant/20 ml-2 tree-content hidden">
+<div class="flex justify-between items-center text-[12px] font-code-data text-on-surface-variant">
+<span>product_id</span>
+<span class="text-outline/50 uppercase">int64</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- Bottom Results Section -->
+<section class="h-64 glass-panel border-x-0 border-b-0 flex flex-col overflow-hidden">
+<div class="flex items-center justify-between px-md py-2 border-b border-outline-variant/30 bg-surface-container/50">
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs font-label-caps text-[12px] border-b-2 border-primary pb-1 text-primary">
+<span class="material-symbols-outlined text-sm">table_rows</span>
+                            DATA_RESULTS
+                        </div>
+<div class="flex items-center gap-xs font-label-caps text-[12px] text-on-surface-variant hover:text-primary cursor-pointer transition-colors pb-1">
+<span class="material-symbols-outlined text-sm">analytics</span>
+                            EXECUTION_PLAN
+                        </div>
+</div>
+<div class="flex items-center gap-md text-on-surface-variant font-code-data text-[11px]">
+<span>Rows: 124</span>
+<span>Time: 0.24s</span>
+<span class="material-symbols-outlined text-sm hover:text-primary cursor-pointer">download</span>
+</div>
+</div>
+<div class="flex-1 overflow-auto bg-black/20">
+<table class="w-full text-left border-collapse font-code-data text-sm">
+<thead class="sticky top-0 bg-surface-container z-10">
+<tr>
+<th class="p-sm border-b border-outline-variant/30 text-outline uppercase text-[11px] tracking-widest font-label-caps">order_id</th>
+<th class="p-sm border-b border-outline-variant/30 text-outline uppercase text-[11px] tracking-widest font-label-caps">customer_id</th>
+<th class="p-sm border-b border-outline-variant/30 text-outline uppercase text-[11px] tracking-widest font-label-caps">status</th>
+<th class="p-sm border-b border-outline-variant/30 text-outline uppercase text-[11px] tracking-widest font-label-caps">amount</th>
+<th class="p-sm border-b border-outline-variant/30 text-outline uppercase text-[11px] tracking-widest font-label-caps">created_at</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="p-sm text-primary">ORD_782341</td>
+<td class="p-sm">USR_9021</td>
+<td class="p-sm">
+<span class="px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">COMPLETED</span>
+</td>
+<td class="p-sm text-on-surface">$1,240.50</td>
+<td class="p-sm text-outline">2023-11-20 14:22:10</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="p-sm text-primary">ORD_782342</td>
+<td class="p-sm">USR_4412</td>
+<td class="p-sm">
+<span class="px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-500 text-[10px] font-bold border border-yellow-500/20">PENDING</span>
+</td>
+<td class="p-sm text-on-surface">$450.00</td>
+<td class="p-sm text-outline">2023-11-20 15:10:05</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="p-sm text-primary">ORD_782343</td>
+<td class="p-sm">USR_1109</td>
+<td class="p-sm">
+<span class="px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">COMPLETED</span>
+</td>
+<td class="p-sm text-on-surface">$2,100.99</td>
+<td class="p-sm text-outline">2023-11-20 16:45:30</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="p-sm text-primary">ORD_782344</td>
+<td class="p-sm">USR_3382</td>
+<td class="p-sm">
+<span class="px-2 py-0.5 rounded-full bg-red-500/10 text-red-500 text-[10px] font-bold border border-red-500/20">FAILED</span>
+</td>
+<td class="p-sm text-on-surface">$89.00</td>
+<td class="p-sm text-outline">2023-11-21 09:12:44</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="p-sm text-primary">ORD_782345</td>
+<td class="p-sm">USR_5561</td>
+<td class="p-sm">
+<span class="px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">COMPLETED</span>
+</td>
+<td class="p-sm text-on-surface">$342.20</td>
+<td class="p-sm text-outline">2023-11-21 10:30:15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+<!-- Status Bar Footer -->
+<footer class="h-8 bg-surface-container-lowest border-t border-outline-variant/30 px-md flex items-center justify-between z-50">
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="font-code-data text-[10px] text-primary tracking-widest uppercase">LIVE_CONNECTION</span>
+</div>
+<div class="h-3 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">bolt</span>
+<span class="font-code-data text-[10px] text-on-surface-variant">Latency: 42ms</span>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<span class="font-code-data text-[10px] text-on-surface-variant">UTF-8</span>
+<span class="font-code-data text-[10px] text-on-surface-variant">SQL (PostgreSQL)</span>
+</div>
+</footer>
+<script>
+        // Schema Explorer Interaction
+        document.querySelectorAll('.schema-tree-item').forEach(item => {
+            const header = item.querySelector('.flex.items-center');
+            header.addEventListener('click', function(e) {
+                const content = item.querySelector('.tree-content');
+                const icon = item.querySelector('.toggle-icon');
+                
+                if (content.classList.contains('hidden')) {
+                    content.classList.remove('hidden');
+                    icon.innerText = 'keyboard_arrow_down';
+                } else {
+                    content.classList.add('hidden');
+                    icon.innerText = 'keyboard_arrow_right';
+                }
+            });
+        });
+
+        // Run Query Simulation
+        const runBtn = document.querySelector('button');
+        runBtn.addEventListener('click', function() {
+            const originalText = this.innerText;
+            this.innerText = 'EXECUTING...';
+            this.classList.add('animate-pulse');
+            
+            setTimeout(() => {
+                this.innerText = originalText;
+                this.classList.remove('animate-pulse');
+            }, 1200);
+        });
+    </script>
+</body></html>

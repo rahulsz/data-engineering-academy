@@ -1,4 +1,4 @@
-import { SqlPlayground } from '@/features/playground/sql/SqlPlayground';
+import { SqlPlaygroundWrapper } from '@/features/playground/sql/SqlPlaygroundWrapper';
 
 export const metadata = {
   title: 'SQL Playground — DataEngineering.Academy',
@@ -8,7 +8,7 @@ export const metadata = {
 export default function SqlPlaygroundPage() {
   return (
     <div className="h-[calc(100vh-56px)]">
-      <SqlPlayground />
+      <SqlPlaygroundWrapper />
     </div>
   );
 }

@@ -1,0 +1,20 @@
+---
+title: "SCD Type 2: Tracking Historical Data"
+excerpt: "How to handle dimension updates when history matters."
+date: "2026-06-22"
+category: "Architecture"
+tags: ["modeling", "scd", "data-warehouse"]
+coverImage: "🕒"
+---
+
+
+When a customer moves to a new city, do you overwrite their old city in your database? If you do, your past sales reports will retroactively assign their old purchases to their new city!
+
+### SCD Type 2
+
+Slowly Changing Dimension Type 2 solves this by adding new rows instead of updating existing ones. You add `valid_from`, `valid_to`, and `is_current` columns.
+
+```sql
+SELECT * FROM dim_customer WHERE is_current = TRUE;
+```
+

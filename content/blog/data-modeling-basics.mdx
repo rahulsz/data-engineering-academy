@@ -1,0 +1,22 @@
+---
+title: "Data Modeling: Star Schema Basics"
+excerpt: "An introduction to Fact and Dimension tables for data warehousing."
+date: "2026-06-27"
+category: "Architecture"
+tags: ["modeling", "star-schema", "kimball"]
+coverImage: "⭐"
+---
+
+
+Data modeling is how we structure data for analytical querying. The most famous approach is the Kimball Star Schema.
+
+### Fact Tables
+
+Fact tables store quantitative data (measurements/metrics). Think of them as events. Examples: `sales`, `page_views`, `rides`.
+
+### Dimension Tables
+
+Dimension tables store descriptive attributes related to the facts. They answer the "who, what, where, when". Examples: `users`, `products`, `locations`.
+
+By joining a central Fact table to multiple Dimension tables, the schema looks like a star!
+

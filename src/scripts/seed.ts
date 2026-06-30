@@ -8,6 +8,7 @@ import { Challenge } from "../models/Challenge";
 import { Flashcard } from "../models/Flashcard";
 import { Quiz } from "../models/Quiz";
 import { InterviewQuestion } from "../models/InterviewQuestion";
+import { Project } from "../models/Project";
 
 // Load environment variables from .env.local
 dotenv.config({ path: resolve(process.cwd(), ".env.local") });
@@ -235,6 +236,553 @@ const interviewQuestions = [
 ];
 
 
+
+const pythonLessons = [
+  // Section 1
+  { slug: "python-intro", title: "Introduction to Python for Data Engineering", type: "theory", xp: 10, duration: 5, visualizer: false, order: 1 },
+  { slug: "variables-types", title: "Variables, Data Types & Type Hints", type: "theory", xp: 10, duration: 5, visualizer: false, order: 2 },
+  { slug: "control-flow", title: "Control Flow: if/else, loops", type: "interactive", xp: 15, duration: 10, visualizer: false, order: 3 },
+  { slug: "functions", title: "Functions & Lambda Expressions", type: "interactive", xp: 15, duration: 10, visualizer: false, order: 4 },
+  { slug: "data-structures", title: "Lists, Dicts, Tuples & Sets", type: "interactive", xp: 15, duration: 10, visualizer: false, order: 5 },
+  // Section 2
+  { slug: "file-io", title: "Reading & Writing Files (CSV, JSON, TXT)", type: "interactive", xp: 20, duration: 10, visualizer: false, order: 6 },
+  { slug: "error-handling", title: "Exception Handling & Try/Except", type: "theory", xp: 15, duration: 5, visualizer: false, order: 7 },
+  { slug: "working-with-apis", title: "Working with REST APIs (requests library)", type: "interactive", xp: 20, duration: 10, visualizer: false, order: 8 },
+  { slug: "regex-basics", title: "Regular Expressions for Data Cleaning", type: "interactive", xp: 20, duration: 10, visualizer: false, order: 9 },
+  // Section 3
+  { slug: "pandas-intro", title: "Introduction to Pandas & DataFrames", type: "interactive", xp: 25, duration: 10, visualizer: true, order: 10 },
+  { slug: "pandas-selection", title: "Selecting & Filtering Data", type: "interactive", xp: 25, duration: 10, visualizer: false, order: 11 },
+  { slug: "pandas-groupby", title: "GroupBy & Aggregation in Pandas", type: "interactive", xp: 30, duration: 10, visualizer: false, order: 12 },
+  { slug: "pandas-merge", title: "Merging & Joining DataFrames", type: "interactive", xp: 30, duration: 10, visualizer: false, order: 13 },
+  { slug: "pandas-cleaning", title: "Data Cleaning: Nulls, Duplicates, Types", type: "interactive", xp: 25, duration: 10, visualizer: false, order: 14 },
+  // Section 4
+  { slug: "list-comprehensions", title: "List Comprehensions & Generators", type: "interactive", xp: 20, duration: 10, visualizer: false, order: 15 },
+  { slug: "decorators", title: "Decorators for Pipeline Logging", type: "theory", xp: 25, duration: 5, visualizer: false, order: 16 },
+  { slug: "context-managers", title: "Context Managers (with statement)", type: "theory", xp: 20, duration: 5, visualizer: false, order: 17 },
+  // Section 5
+  { slug: "python-etl", title: "Building an ETL Script in Python", type: "exercise", xp: 35, duration: 15, visualizer: false, order: 18 },
+  { slug: "multiprocessing", title: "Parallel Processing for Large Datasets", type: "theory", xp: 30, duration: 5, visualizer: false, order: 19 },
+  { slug: "python-interview", title: "Python Interview Master Class", type: "interactive", xp: 40, duration: 10, visualizer: false, order: 20 },
+];
+
+const pythonLesson1Content = `
+# Introduction to Python for Data Engineering
+
+Why Python dominates data engineering (vs Java/Scala):
+Python is incredibly versatile and has a massive ecosystem of libraries tailored for data. While Java and Scala are often used for heavy JVM-based frameworks like Spark, Python has become the lingua franca for data engineering due to its ease of use.
+
+The data engineering Python stack:
+- **Pandas**: For in-memory data manipulation.
+- **PySpark**: For distributed big data processing.
+- **Airflow**: For orchestrating data pipelines.
+- **dbt**: For SQL-based data transformations.
+
+Real examples:
+- **Airbnb** uses Python for Airflow to manage thousands of daily pipelines.
+- **Spotify** uses Python extensively for their data processing and machine learning workflows.
+
+<Callout type="tip">Python's readability makes it the default choice for ETL scripts and orchestration logic</Callout>
+`;
+
+const pythonLesson6Content = `
+# Reading & Writing Files
+
+Working with files is a core data engineering skill.
+
+Reading CSV with built-in \`csv\` module vs Pandas:
+<CodeBlock language="python">
+{\`import csv
+with open('data.csv', mode='r') as file:
+    reader = csv.reader(file)
+    for row in reader:
+        print(row)\`}
+</CodeBlock>
+
+Pandas is much easier for tabular data:
+<CodeBlock language="python">
+{\`import pandas as pd
+df = pd.read_csv('data.csv')
+print(df.head())\`}
+</CodeBlock>
+
+Reading/writing JSON:
+<CodeBlock language="python">
+{\`import json
+# Write JSON
+with open('data.json', 'w') as f:
+    json.dump({'name': 'Data', 'type': 'JSON'}, f)
+
+# Read JSON
+with open('data.json', 'r') as f:
+    data = json.load(f)\`}
+</CodeBlock>
+
+Working with file paths using \`pathlib\`:
+<CodeBlock language="python">
+{\`from pathlib import Path
+path = Path('data.csv')
+if path.exists():
+    print("File found!")\`}
+</CodeBlock>
+
+Common pitfalls:
+- Encoding issues: Always use \`encoding='utf-8'\` when opening text files.
+- Large file handling: Do not read a 10GB file into memory using \`.read()\`. Iterate line by line.
+`;
+
+const pythonLesson10Content = `
+# Introduction to Pandas & DataFrames
+
+What is a DataFrame?
+Conceptually, a DataFrame is a 2-dimensional labeled data structure with columns of potentially different types. You can think of it like a spreadsheet or SQL table.
+
+Creating DataFrames from dicts, lists, CSV:
+<CodeBlock language="python">
+{\`import pandas as pd
+
+# From a dict
+data = {'Name': ['Tom', 'nick', 'krish', 'jack'], 'Age': [20, 21, 19, 18]}
+df = pd.DataFrame(data)
+
+# From CSV
+df_csv = pd.read_csv('sales.csv')\`}
+</CodeBlock>
+
+Exploring data:
+- \`.head()\`: View first 5 rows
+- \`.info()\`: View schema and null counts
+- \`.describe()\`: Summary statistics
+- \`.shape\`: Tuple representing (rows, columns)
+
+Series vs DataFrame:
+A Series is a single column. A DataFrame is a collection of Series.
+
+<VisualizerEmbed name="PandasIntro" />
+`;
+
+const pythonLesson18Content = `
+# Building an ETL Script in Python
+
+Here is a full worked example of an Extract, Transform, Load script. We extract from a CSV, transform the data using Pandas, and load it into a new CSV.
+
+<CodeBlock language="python">
+{\`import pandas as pd
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+def extract(file_path):
+    logging.info(f"Extracting data from {file_path}")
+    try:
+        return pd.read_csv(file_path)
+    except Exception as e:
+        logging.error(f"Failed to extract: {e}")
+        raise
+
+def transform(df):
+    logging.info("Transforming data")
+    # Clean nulls
+    df = df.dropna()
+    # Type casting
+    df['price'] = pd.to_numeric(df['price'])
+    # Derive new column
+    df['total'] = df['price'] * df['quantity']
+    return df
+
+def load(df, output_path):
+    logging.info(f"Loading data to {output_path}")
+    try:
+        df.to_csv(output_path, index=False)
+    except Exception as e:
+        logging.error(f"Failed to load: {e}")
+        raise
+
+if __name__ == "__main__":
+    df = extract("raw_sales.csv")
+    df_transformed = transform(df)
+    load(df_transformed, "clean_sales.csv")\`}
+</CodeBlock>
+
+Error handling and logging are crucial in production ETL scripts!
+
+Exercise: Modify this script to handle a JSON source instead.
+`;
+
+
+
+const sparkLessons = [
+  // Section 1
+  { slug: "spark-intro", title: "What is Apache Spark?", type: "theory", xp: 15, duration: 5, visualizer: false, order: 1 },
+  { slug: "spark-architecture", title: "Spark Architecture: Driver, Executors, Cluster Manager", type: "interactive", xp: 25, duration: 10, visualizer: true, order: 2 },
+  { slug: "rdd-basics", title: "RDDs: Resilient Distributed Datasets", type: "interactive", xp: 25, duration: 10, visualizer: false, order: 3 },
+  { slug: "spark-setup", title: "Setting Up a Spark Environment", type: "theory", xp: 15, duration: 5, visualizer: false, order: 4 },
+  // Section 2
+  { slug: "spark-dataframes", title: "Spark DataFrames", type: "interactive", xp: 25, duration: 10, visualizer: false, order: 5 },
+  { slug: "dataframe-operations", title: "DataFrame Operations: select, filter, withColumn", type: "interactive", xp: 25, duration: 10, visualizer: false, order: 6 },
+  { slug: "spark-sql", title: "Spark SQL & Temp Views", type: "interactive", xp: 25, duration: 10, visualizer: false, order: 7 },
+  { slug: "spark-joins", title: "Joins in Spark", type: "interactive", xp: 30, duration: 10, visualizer: false, order: 8 },
+  { slug: "spark-aggregations", title: "Aggregations & GroupBy in Spark", type: "interactive", xp: 30, duration: 10, visualizer: false, order: 9 },
+  // Section 3
+  { slug: "lazy-evaluation", title: "Lazy Evaluation & Transformations vs Actions", type: "theory", xp: 25, duration: 5, visualizer: false, order: 10 },
+  { slug: "spark-dag", title: "DAG, Stages & Tasks", type: "interactive", xp: 30, duration: 10, visualizer: false, order: 11 },
+  { slug: "partitioning", title: "Partitioning Strategies", type: "theory", xp: 30, duration: 5, visualizer: false, order: 12 },
+  { slug: "shuffling", title: "Understanding Shuffle Operations", type: "interactive", xp: 35, duration: 10, visualizer: false, order: 13 },
+  // Section 4
+  { slug: "spark-caching", title: "Caching & Persistence", type: "theory", xp: 25, duration: 5, visualizer: false, order: 14 },
+  { slug: "broadcast-joins", title: "Broadcast Joins for Performance", type: "interactive", xp: 30, duration: 10, visualizer: false, order: 15 },
+  { slug: "data-skew", title: "Handling Data Skew", type: "theory", xp: 30, duration: 5, visualizer: false, order: 16 },
+  { slug: "spark-tuning", title: "Spark Configuration & Tuning Basics", type: "theory", xp: 30, duration: 5, visualizer: false, order: 17 },
+  // Section 5
+  { slug: "spark-streaming-intro", title: "Intro to Spark Structured Streaming", type: "theory", xp: 30, duration: 5, visualizer: false, order: 18 },
+  { slug: "spark-with-airflow", title: "Orchestrating Spark Jobs with Airflow", type: "theory", xp: 25, duration: 5, visualizer: false, order: 19 },
+  { slug: "reading-writing-formats", title: "Reading/Writing Parquet, Avro, Delta", type: "interactive", xp: 30, duration: 10, visualizer: false, order: 20 },
+  // Section 6
+  { slug: "spark-etl-project", title: "Mini ETL Project with PySpark", type: "exercise", xp: 40, duration: 15, visualizer: false, order: 21 },
+  { slug: "spark-interview", title: "Spark Interview Master Class", type: "interactive", xp: 40, duration: 10, visualizer: false, order: 22 },
+];
+
+const sparkLesson1Content = `
+# What is Apache Spark?
+
+Spark vs Hadoop MapReduce (why Spark won):
+Historically, Hadoop MapReduce was the standard for big data processing. However, it involved writing data to disk after every step, which was incredibly slow. Spark introduced **in-memory processing**, meaning it keeps data in RAM across operations, making it up to 100x faster for certain workloads.
+
+Spark's unified engine:
+Spark isn't just one thing. It's a unified engine that supports:
+- **Batch Processing** (Core/DataFrames)
+- **Streaming** (Structured Streaming)
+- **Machine Learning** (MLlib)
+- **SQL** (Spark SQL)
+
+Real examples:
+- **Netflix** processes recommendation data with Spark to handle petabytes of viewing history.
+- **Uber** uses Spark for trip data aggregation and real-time analytics.
+
+<Callout type="info">Spark can be 100x faster than MapReduce for in-memory operations</Callout>
+`;
+
+const sparkLesson2Content = `
+# Spark Architecture
+
+Understanding how Spark runs under the hood is critical for data engineers.
+
+Core components:
+- **Driver Program**: The process running your \`main()\` function. It creates the \`SparkContext\` and converts your code into a DAG.
+- **Cluster Manager**: Allocates resources across the cluster (e.g., YARN, Kubernetes, Standalone).
+- **Worker Nodes**: The machines that actually run the tasks.
+- **Executors**: Processes launched on Worker Nodes that run tasks and keep data in memory or on disk.
+
+How a job gets distributed:
+When you call an action (like \`.collect()\`), the Driver translates your code into a physical execution plan, splits it into stages and tasks, and sends those tasks to the Executors. The Executors run the code on their chunk of the data (partitions) and report back.
+
+<VisualizerEmbed name="SparkArch" />
+
+The diagram above shows the relationship between the Driver, Cluster Manager, and multiple Executors across Worker Nodes. Notice how each Executor handles multiple Tasks simultaneously!
+`;
+
+const sparkLesson10Content = `
+# Lazy Evaluation
+
+Lazy evaluation is one of Spark's most important concepts.
+
+Transformations vs Actions:
+- **Transformations (Lazy)**: Operations like \`.map()\`, \`.filter()\`, or \`.join()\`. When you call these, Spark does **not** execute them immediately. It just builds a lineage graph (DAG) of the operations.
+- **Actions (Eager)**: Operations like \`.collect()\`, \`.count()\`, or \`.write()\`. When you call an action, Spark finally executes the entire DAG to compute the result.
+
+Why lazy evaluation matters:
+It allows Spark to optimize the execution plan. For example, if you filter a dataset and then join it, Spark can optimize the plan to push the filter down to the data source (Predicate Pushdown), reading only the necessary data into memory.
+
+Code example:
+<CodeBlock language="python">
+{\`# Transformations (Lazy) - Nothing runs yet!
+rdd = sc.textFile("data.csv")
+filtered_rdd = rdd.filter(lambda x: "ERROR" in x)
+mapped_rdd = filtered_rdd.map(lambda x: x.split(","))
+
+# Action (Eager) - Now Spark executes the DAG!
+errors_count = mapped_rdd.count()
+print(f"Found {errors_count} errors")\`}
+</CodeBlock>
+
+Common confusion: "Why didn't my code run yet?"
+If you write a complex PySpark script full of transformations and it finishes in 0.01 seconds, it's because you didn't call an Action! The data hasn't been processed yet.
+`;
+
+
+const projectsData = [
+  {
+    slug: "netflix-etl-pipeline",
+    title: "Netflix-Style Content ETL Pipeline",
+    difficulty: "intermediate",
+    stack: ["Python", "Pandas", "PostgreSQL", "Airflow", "Docker"],
+    estimatedHours: 6,
+    coverImage: "🎬",
+    overview: "Build an ETL pipeline that ingests raw viewing data (CSV), cleans and transforms it, and loads it into a PostgreSQL warehouse — simulating how Netflix processes viewing event data for analytics.",
+    architecture: `Raw CSV Files (viewing_events.csv)
+↓
+Extract (Python script reads CSV in chunks)
+↓
+Transform (Pandas: dedupe, type casting, derive watch_duration_minutes)
+↓
+Load (psycopg2 batch insert into PostgreSQL)
+↓
+PostgreSQL Warehouse (fact_viewing_events table)
+↓
+Airflow DAG (orchestrates daily run)`,
+    folderStructure: `netflix-etl-pipeline/
+├── dags/
+│   └── viewing_events_dag.py
+├── scripts/
+│   ├── extract.py
+│   ├── transform.py
+│   └── load.py
+├── sql/
+│   └── create_tables.sql
+├── data/
+│   └── sample_viewing_events.csv
+├── docker-compose.yml
+└── requirements.txt`,
+    implementationGuide: `
+# Netflix-Style ETL Implementation Guide
+
+1. **Set up PostgreSQL with Docker Compose**
+   Create a \`docker-compose.yml\` with a Postgres image.
+
+2. **Write the extract script**
+   Read the CSV in chunks to avoid memory issues with large files.
+   <CodeBlock language="python">
+   {\`import pandas as pd
+   chunks = pd.read_csv('data.csv', chunksize=10000)\`}
+   </CodeBlock>
+
+3. **Write the transform script**
+   Clean the data with Pandas (deduplication, casting).
+
+4. **Write the load script**
+   Use psycopg2 \`execute_batch\` for efficient bulk inserts.
+
+5. **Build the Airflow DAG**
+   Create a PythonOperator for each stage (Extract, Transform, Load) and define dependencies \`extract >> transform >> load\`.
+    `,
+    learningOutcomes: ["Building idempotent ETL scripts", "Chunked processing for large files", "Airflow DAG authoring", "PostgreSQL bulk insert patterns"],
+    prerequisites: ["Python module", "SQL module", "Airflow basics"]
+  },
+  {
+    slug: "spotify-data-pipeline",
+    title: "Spotify-Style Listening Analytics Pipeline",
+    difficulty: "intermediate",
+    stack: ["Python", "Apache Kafka", "Spark Streaming", "MongoDB"],
+    estimatedHours: 8,
+    coverImage: "🎧",
+    overview: "Simulate a real-time listening event pipeline — producer generates 'song played' events, Kafka streams them, Spark Structured Streaming aggregates listens per artist in near real-time, results land in MongoDB.",
+    architecture: `Event Producer (Python script simulates user listens)
+↓
+Kafka Topic: listening-events
+↓
+Spark Structured Streaming (consumes, windows by 1-minute, aggregates by artist)
+↓
+MongoDB (real-time artist_play_counts collection)
+↓
+Dashboard (simple Flask/Streamlit view of top artists)`,
+    folderStructure: `spotify-data-pipeline/
+├── producer/
+│   └── event_generator.py
+├── streaming/
+│   └── spark_consumer.py
+├── sink/
+│   └── mongo_writer.py
+├── dashboard/
+│   └── app.py
+├── docker-compose.yml (Kafka + Zookeeper + MongoDB)
+└── requirements.txt`,
+    implementationGuide: `
+# Spotify-Style Pipeline Guide
+
+Set up a streaming architecture using Kafka and Spark.
+1. Use a Python producer to send JSON events to a Kafka topic.
+2. Build a Spark Structured Streaming job to read from Kafka.
+3. Apply a tumbling window aggregation on the 'artist' field.
+4. Write the aggregated results to MongoDB using the \`foreachBatch\` sink.
+    `,
+    learningOutcomes: ["Event-driven architecture", "Kafka producer/consumer patterns", "Spark Structured Streaming windowing", "Real-time aggregation patterns"],
+    prerequisites: ["Spark module", "Kafka fundamentals"]
+  },
+  {
+    slug: "uber-analytics-pipeline",
+    title: "Uber-Style Trip Analytics Pipeline",
+    difficulty: "advanced",
+    stack: ["PySpark", "Apache Airflow", "Snowflake", "dbt"],
+    estimatedHours: 10,
+    coverImage: "🚗",
+    overview: "Batch pipeline processing daily trip data — calculating surge pricing zones, driver utilization, and trip patterns. Demonstrates a full modern data stack (ELT pattern with dbt transformations on Snowflake).",
+    architecture: `Raw Trip Data (Parquet files, partitioned by date)
+↓
+PySpark (Extract + Load raw data to Snowflake staging)
+↓
+Snowflake (raw_trips table)
+↓
+dbt models (staging → intermediate → marts)
+↓
+Snowflake (fct_trips, dim_drivers, agg_surge_zones)
+↓
+Airflow (orchestrates: Spark job → dbt run → dbt test)`,
+    folderStructure: `uber-analytics-pipeline/
+├── dags/
+│   └── trip_analytics_dag.py
+├── spark_jobs/
+│   └── load_raw_trips.py
+├── dbt_project/
+│   ├── models/
+│   │   ├── staging/stg_trips.sql
+│   │   ├── intermediate/int_trip_durations.sql
+│   │   └── marts/fct_trips.sql
+│   └── dbt_project.yml
+└── data/sample_trips.parquet`,
+    implementationGuide: `
+# Uber-Style ELT Pipeline
+
+This project implements the modern ELT (Extract, Load, Transform) pattern.
+Instead of transforming data in Spark before loading, we load raw data into Snowflake and use **dbt (data build tool)** to execute SQL transformations entirely within the warehouse.
+    `,
+    learningOutcomes: ["ELT pattern", "dbt fundamentals", "Snowflake architecture", "Modern data stack orchestration"],
+    prerequisites: ["Spark module", "SQL module (advanced)", "Snowflake concepts"]
+  },
+  {
+    slug: "sales-analytics-dashboard",
+    title: "End-to-End Sales Analytics Dashboard",
+    difficulty: "beginner",
+    stack: ["Python", "SQL", "Pandas", "Streamlit"],
+    estimatedHours: 4,
+    coverImage: "📊",
+    overview: "A beginner-friendly project — ingest sales CSV data, run SQL transformations, build a Streamlit dashboard showing revenue trends, top products, and regional breakdowns.",
+    architecture: `Sales CSV
+↓
+SQLite (local DB)
+↓
+SQL aggregation queries
+↓
+Streamlit Dashboard`,
+    folderStructure: `sales-analytics-dashboard/
+├── data/sales.csv
+├── db/setup.py
+├── queries/aggregations.sql
+├── app.py (Streamlit)
+└── requirements.txt`,
+    implementationGuide: `
+# Sales Dashboard
+
+A perfect introductory project linking Python, SQL, and simple visualization.
+Load a CSV into a local SQLite DB, execute \`GROUP BY\` queries to find total revenue per month, and display charts using Streamlit.
+    `,
+    learningOutcomes: ["SQL aggregation in practice", "Basic dashboarding", "End-to-end data flow for beginners"],
+    prerequisites: ["SQL module"]
+  },
+  {
+    slug: "data-warehouse-design",
+    title: "Star Schema Data Warehouse Design",
+    difficulty: "intermediate",
+    stack: ["PostgreSQL", "SQL", "dbt", "ERD tools"],
+    estimatedHours: 5,
+    coverImage: "🏛️",
+    overview: "Design and implement a star-schema data warehouse for an e-commerce business — fact tables, dimension tables, slowly changing dimensions (SCD Type 2).",
+    architecture: `OLTP source tables (normalized)
+↓
+Staging layer (raw copies)
+↓
+Dimension tables (dim_customer with SCD2, dim_product, dim_date)
+↓
+Fact table (fct_orders — grain: one row per order line item)
+↓
+BI-ready star schema`,
+    folderStructure: `data-warehouse-design/
+├── sql/
+│   ├── 01_staging.sql
+│   ├── 02_dimensions.sql
+│   ├── 03_scd2_logic.sql
+│   └── 04_fact_table.sql
+├── docs/erd.png
+└── README.md`,
+    implementationGuide: `
+# Dimensional Modeling
+
+Focus heavily on designing a Star Schema. Define your Fact table (e.g., \`fct_orders\`) surrounded by Dimension tables (\`dim_customer\`, \`dim_product\`, \`dim_date\`).
+Implement Slowly Changing Dimensions (SCD Type 2) to track historical changes in customer addresses.
+    `,
+    learningOutcomes: ["Dimensional modeling", "SCD Type 2 implementation", "Star schema design principles"],
+    prerequisites: ["SQL module (advanced)", "Data Warehousing concepts"]
+  },
+  {
+    slug: "pyspark-analytics-project",
+    title: "Large-Scale Log Analytics with PySpark",
+    difficulty: "advanced",
+    stack: ["PySpark", "Parquet", "AWS S3"],
+    estimatedHours: 7,
+    coverImage: "📈",
+    overview: "Process and analyze a large synthetic web server log dataset (millions of rows) using PySpark — extract patterns, detect anomalies, optimize for performance.",
+    architecture: `Raw log files (gzipped text, simulating S3 storage)
+↓
+PySpark read + parse (regex extraction of log fields)
+↓
+Transformations (sessionization, error rate calculation, partitioning by date)
+↓
+Write to Parquet (partitioned by date, optimized for downstream queries)
+↓
+Analysis queries (top error pages, traffic patterns, response time percentiles)`,
+    folderStructure: `pyspark-analytics-project/
+├── data/generate_logs.py
+├── jobs/
+│   ├── parse_logs.py
+│   ├── sessionize.py
+│   └── analyze.py
+└── notebooks/exploration.ipynb`,
+    implementationGuide: `
+# Spark Log Analytics
+
+Use PySpark and Regex to parse unstructured text logs into structured DataFrames.
+Apply advanced window functions for sessionization (grouping user actions into contiguous sessions).
+Optimize performance by writing the output as partitioned Parquet files.
+    `,
+    learningOutcomes: ["Large-scale data processing", "Spark performance optimization", "Partitioning strategy", "Log analytics patterns"],
+    prerequisites: ["Spark module (full)"]
+  },
+  {
+    slug: "kafka-streaming-project",
+    title: "Real-Time Fraud Detection with Kafka",
+    difficulty: "advanced",
+    stack: ["Apache Kafka", "Python", "Redis", "Flask"],
+    estimatedHours: 8,
+    coverImage: "🔍",
+    overview: "Build a real-time fraud detection system — transaction events flow through Kafka, a Python consumer applies rule-based fraud detection, flagged transactions trigger alerts via Redis pub/sub.",
+    architecture: `Transaction Producer (simulates payment events)
+↓
+Kafka Topic: transactions
+↓
+Fraud Detection Consumer (Python: velocity checks, amount thresholds, geo-anomalies)
+↓
+Kafka Topic: fraud-alerts (flagged transactions)
+↓
+Redis Pub/Sub (real-time alert distribution)
+↓
+Flask Dashboard (live alert feed via WebSocket)`,
+    folderStructure: `kafka-streaming-project/
+├── producer/transaction_generator.py
+├── consumer/fraud_detector.py
+├── rules/fraud_rules.py
+├── dashboard/
+│   ├── app.py
+│   └── templates/index.html
+└── docker-compose.yml`,
+    implementationGuide: `
+# Real-Time Fraud Detection
+
+Build a streaming pipeline that can evaluate transactions in real-time.
+Consumers will apply rules (e.g. "more than 3 transactions in 1 minute from the same IP") and push fraud alerts to a secondary Kafka topic or Redis.
+    `,
+    learningOutcomes: ["Real-time stream processing", "Rule-based detection systems", "Kafka consumer patterns", "Pub/sub architecture"],
+    prerequisites: ["Kafka fundamentals", "Python module"]
+  }
+];
+
 async function seed() {
   try {
     await mongoose.connect(MONGODB_URI!);
@@ -314,8 +862,99 @@ async function seed() {
     console.log(`Inserted ${lessonOrder - 1} SQL lessons.`);
 
     // Map remaining courses so they don't 404
+    
+    // Get Python Course
+    const pythonCourse = courses.find(c => c.slug === "python");
+    if (!pythonCourse) throw new Error("Python Course not created");
+
+    // Create Module for Python
+    const pythonModule = await Module.create({
+      courseId: pythonCourse._id,
+      slug: "python",
+      title: "Python Fundamentals",
+      description: "Master Python fundamentals, Pandas, and data processing patterns used in real data pipelines",
+      order: 2,
+      icon: "🐍",
+      totalLessons: 20,
+      estimatedMinutes: 420,
+      published: true
+    });
+    console.log("Created Python Module.");
+
+    // Insert Python Lessons
+    let pythonLessonOrder = 1;
+    for (const lesson of pythonLessons) {
+      let content = "More content coming soon...";
+      if (lesson.order === 1) content = pythonLesson1Content;
+      if (lesson.order === 6) content = pythonLesson6Content;
+      if (lesson.order === 10) content = pythonLesson10Content;
+      if (lesson.order === 18) content = pythonLesson18Content;
+
+      await Lesson.create({
+        courseId: pythonCourse._id,
+        moduleId: pythonModule._id,
+        slug: lesson.slug,
+        title: lesson.title,
+        type: lesson.type as any,
+        content: content,
+        xpReward: lesson.xp,
+        order: lesson.order,
+        duration: lesson.duration,
+        hasVisualizer: lesson.visualizer,
+        hasPlayground: lesson.type === "interactive",
+        published: true,
+      });
+      pythonLessonOrder++;
+    }
+    console.log(`Inserted ${pythonLessonOrder - 1} Python lessons.`);
+
+    
+    // Get Spark Course
+    const sparkCourse = courses.find(c => c.slug === "spark");
+    if (!sparkCourse) throw new Error("Spark Course not created");
+
+    // Create Module for Spark
+    const sparkModule = await Module.create({
+      courseId: sparkCourse._id,
+      slug: "spark",
+      title: "Apache Spark Fundamentals",
+      description: "Distributed data processing from RDDs to production pipelines",
+      order: 9,
+      icon: "⚡",
+      totalLessons: 22,
+      estimatedMinutes: 540,
+      published: true
+    });
+    console.log("Created Spark Module.");
+
+    // Insert Spark Lessons
+    let sparkLessonOrder = 1;
+    for (const lesson of sparkLessons) {
+      let content = "More content coming soon...";
+      if (lesson.order === 1) content = sparkLesson1Content;
+      if (lesson.order === 2) content = sparkLesson2Content;
+      if (lesson.order === 10) content = sparkLesson10Content;
+
+      await Lesson.create({
+        courseId: sparkCourse._id,
+        moduleId: sparkModule._id,
+        slug: lesson.slug,
+        title: lesson.title,
+        type: lesson.type as any,
+        content: content,
+        xpReward: lesson.xp,
+        order: lesson.order,
+        duration: lesson.duration,
+        hasVisualizer: lesson.visualizer,
+        hasPlayground: lesson.type === "interactive",
+        published: true,
+      });
+      sparkLessonOrder++;
+    }
+    console.log(`Inserted ${sparkLessonOrder - 1} Spark lessons.`);
+
     for (const c of courses) {
-      if (c.slug === "sql") continue;
+      if (c.slug === "sql" || c.slug === "python" || c.slug === "spark") continue;
 
       const mod = await Module.create({
         courseId: c._id,
@@ -394,6 +1033,16 @@ async function seed() {
       });
     }
     console.log(`Inserted ${interviewQuestions.length} interview questions.`);
+
+    
+    // --- SPRINT 4 PROJECTS DATA ---
+    await Project.deleteMany({});
+    console.log("Cleared existing Projects.");
+    
+    for (const p of projectsData) {
+      await Project.create(p as any);
+    }
+    console.log(`Inserted ${projectsData.length} projects.`);
 
     console.log("Seed completed successfully!");
   } catch (error) {

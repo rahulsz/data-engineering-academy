@@ -1,0 +1,20 @@
+---
+title: "ETL vs ELT: The Modern Data Stack Shift"
+excerpt: "Why the industry moved from Extract-Transform-Load to Extract-Load-Transform."
+date: "2026-06-29"
+category: "Architecture"
+tags: ["etl", "elt", "dbt", "snowflake"]
+coverImage: "🔄"
+---
+
+
+For decades, data engineering was synonymous with **ETL (Extract, Transform, Load)**. You pulled data out of a source, spun up an expensive Spark or Hadoop cluster to transform it, and loaded the clean data into a warehouse.
+
+### The Paradigm Shift
+
+With the rise of incredibly powerful cloud data warehouses like Snowflake and BigQuery, computing power is no longer the bottleneck. It's now cheaper and faster to load raw data directly into the warehouse and transform it using SQL. This is **ELT**.
+
+### The Rise of dbt
+
+dbt (data build tool) became the industry standard for the "T" in ELT. It allows data engineers to write transformation logic in pure SQL, applying software engineering best practices like version control, testing, and CI/CD to analytics code.
+
